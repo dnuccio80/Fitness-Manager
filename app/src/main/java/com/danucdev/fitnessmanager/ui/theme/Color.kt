@@ -19,4 +19,6 @@ val DarkAccentLime = Color(0xFFbef925)
 val DarkButton = Color(0xFF302e31)
 val DarkIcons = Color(0xFF555555)
 val DarkIconsAccent = Color(0xFFc2ff27)
+val DarkTextPrimary = DarkAccentWhite
+val DarkTextSecondary = Color(0xFF818181)
 
