@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkButton
+import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
 fun ClientsScreen() {
@@ -137,20 +139,19 @@ private fun ClientRowItem() {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Card(shape = CircleShape, colors = CardDefaults.cardColors(containerColor = DarkAccentLime, contentColor = MainDark)) {
+                Text("DN", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(4.dp))
+            }
             Text(
                 "Damian Nuccio",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium
             )
-            Text(
-                "Ultimo pago: 26-06-2026",
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Medium
-            )
+
         }
     }
 }
