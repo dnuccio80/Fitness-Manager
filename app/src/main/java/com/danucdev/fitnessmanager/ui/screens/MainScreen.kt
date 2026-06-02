@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
@@ -61,7 +62,7 @@ fun MainScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header()
+                Header("Profe Elias")
                 DashboardCardItem()
                 TransactionSection()
                 LastTransactionsSection()
@@ -181,41 +182,10 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
 }
 
 
-@Composable
-fun Header() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.size(50.dp),
-            shape = CircleShape,
-            border = BorderStroke(2.dp, DarkAccentWhite)
-        ) {
-            Image(
-                painterResource(R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-        Column {
-            Text(
-                "Casa de entrenamiento",
-                color = DarkTextSecondary,
-                style = MaterialTheme.typography.titleSmall
-            )
-            Text(
-                "Profe Elias",
-                color = DarkTextPrimary,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
+
 
 @Composable
-fun DashboardCardItem() {
+private fun DashboardCardItem() {
     Card(
         Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -257,7 +227,7 @@ fun DashboardCardItem() {
 }
 
 @Composable
-fun TransactionSection() {
+private fun TransactionSection() {
     LazyRow(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -277,7 +247,7 @@ fun TransactionSection() {
 }
 
 @Composable
-fun DetailsRowWithIcon(label: String, icon: Painter) {
+private fun DetailsRowWithIcon(label: String, icon: Painter) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
