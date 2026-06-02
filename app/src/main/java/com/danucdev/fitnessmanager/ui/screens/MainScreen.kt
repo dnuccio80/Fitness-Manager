@@ -102,8 +102,7 @@ fun BottomBar() {
 fun LastTransactionsSection() {
     Card(
         Modifier
-            .fillMaxWidth()
-            .heightIn(max = 250.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(2.dp)
@@ -126,45 +125,35 @@ fun LastTransactionsSection() {
                     color = DarkAccentWhite
                 )
             }
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                item {
-                    LastTransactionRowItem(
-                        "Pago cuota de Damian Nuccio",
-                        painterResource(R.drawable.ic_money)
-                    )
-                }
-                item {
-                    LastTransactionRowItem(
-                        "Pago cuota de Damian Nuccio",
-                        painterResource(R.drawable.ic_money)
-                    )
-                }
-                item {
-                    LastTransactionRowItem(
-                        "Pago cuota de Damian Nuccio",
-                        painterResource(R.drawable.ic_money)
-                    )
-                }
-                item {
-                    LastTransactionRowItem(
-                        "Pago cuota de Damian Nuccio",
-                        painterResource(R.drawable.ic_money)
-                    )
-                }
-                item {
-                    LastTransactionRowItem(
-                        "Pago cuota de Damian Nuccio",
-                        painterResource(R.drawable.ic_money)
-                    )
-                }
-            }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LastTransactionRowItem(
+                    "Pago cuota de Damian Nuccio",
+                    painterResource(R.drawable.ic_money),
+                    120000
+                )
+                LastTransactionRowItem(
+                    "Pago cuota de Damian Nuccio",
+                    painterResource(R.drawable.ic_money),
+                    120000
+                )
+                LastTransactionRowItem(
+                    "Pago cuota de Damian Nuccio",
+                    painterResource(R.drawable.ic_money),
+                    120000
+                )
+                LastTransactionRowItem(
+                    "Pago cuota de Damian Nuccio",
+                    painterResource(R.drawable.ic_money),
+                    120000
+                )
 
+            }
         }
     }
 }
 
 @Composable
-fun LastTransactionRowItem(label: String, icon: Painter) {
+fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -172,19 +161,23 @@ fun LastTransactionRowItem(label: String, icon: Painter) {
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Card(
-                shape = CircleShape,
-                colors = CardDefaults.cardColors(containerColor = DarkAccentLime)
+        Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+
             ) {
-                Icon(icon, contentDescription = null, tint = MainDark)
+                Card(
+                    shape = CircleShape,
+                    colors = CardDefaults.cardColors(containerColor = DarkAccentLime)
+                ) {
+                    Icon(icon, contentDescription = null, tint = MainDark)
+                }
+                Text(label, style = MaterialTheme.typography.labelLarge)
             }
-            Text(label, style = MaterialTheme.typography.labelLarge)
+            Text("$$amount", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = Color.Green)
         }
+
     }
 }
 
