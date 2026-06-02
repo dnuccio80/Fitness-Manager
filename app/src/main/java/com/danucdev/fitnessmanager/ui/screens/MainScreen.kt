@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.DarkTextPrimary
@@ -62,7 +64,6 @@ fun MainScreen() {
                 Header()
                 DashboardCardItem()
                 TransactionSection()
-//            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = MaterialTheme.colorScheme.primary)
                 LastTransactionsSection()
             }
         }
@@ -71,30 +72,28 @@ fun MainScreen() {
 
 @Composable
 fun BottomBar() {
+
+    val navItems = listOf(
+        BottomNavigationItem.Clients,
+        BottomNavigationItem.Transactions,
+        BottomNavigationItem.Config,
+    )
+
     NavigationBar {
-        NavigationBarItem(
-            selected = true,
-            onClick = { },
-            icon = { Icon(painterResource(R.drawable.ic_money), contentDescription = "") },
-            label = { Text("Clientes") }
-        )
+        navItems.forEach { item ->
+            NavigationBarItem(
+                selected = true,
+                onClick = { },
+                icon = { Icon(painterResource(item.icon), contentDescription = "") },
+                label = { Text(item.label) },
+                colors =  NavigationBarItemDefaults.colors(
+                    selectedIconColor = DarkAccentLime,
+                    selectedTextColor = DarkAccentLime
+                )
+            )
+        }
+
     }
-//    BottomAppBar(containerColor = Color.Transparent) {
-//        Card(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-//            elevation = CardDefaults.cardElevation(4.dp),
-//            shape = RoundedCornerShape(16.dp)
-//        ) {
-//            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-//                Button(onClick = {}) {
-//
-//                }
-//            }
-//        }
-//    }
 
 }
 
@@ -175,7 +174,7 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
                 }
                 Text(label, style = MaterialTheme.typography.labelLarge)
             }
-            Text("$$amount", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = Color.Green)
+            Text("$$amount", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = DarkAccentLime)
         }
 
     }
