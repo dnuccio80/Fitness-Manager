@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,15 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
+import com.danucdev.fitnessmanager.ui.core.ConfirmDialog
 import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.navigation.BottomClientDetailsNavigationItem
-import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
-import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
@@ -145,58 +140,6 @@ private fun ClientsBottomBar(onClick: () -> Unit) {
                 icon = { Icon(it.icon, contentDescription = null) },
                 label = { Text(it.label) }
             )
-        }
-    }
-}
-
-@Composable
-fun ConfirmDialog(text: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
-    Dialog(
-        onDismissRequest = { onDismiss() }
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = DarkAccentWhite,
-                    textAlign = TextAlign.Center
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Button(
-                        onClick = { onDismiss() },
-                        colors = ButtonDefaults.buttonColors(containerColor = DarkAccentGray),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Cancelar")
-                    }
-                    Button(
-                        onClick = { onConfirm() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = DarkAccentLime,
-                            contentColor = MainDark
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Aceptar")
-                    }
-                }
-            }
         }
     }
 }
