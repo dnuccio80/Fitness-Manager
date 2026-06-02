@@ -151,7 +151,6 @@ private fun ClientRowItem() {
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium
             )
-
         }
     }
 }
