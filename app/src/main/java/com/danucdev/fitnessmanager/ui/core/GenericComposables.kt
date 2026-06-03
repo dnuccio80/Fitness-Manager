@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -21,13 +22,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -108,14 +113,14 @@ fun ConfirmDialog(text: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     color = DarkAccentWhite,
                     textAlign = TextAlign.Center
                 )
-                AcceptDeclineButtonItem(onConfirm, onDismiss)
+                AcceptDeclineButtonItem(onConfirm = onConfirm, onDismiss =  onDismiss)
             }
         }
     }
 }
 
 @Composable
-fun AcceptDeclineButtonItem(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun AcceptDeclineButtonItem(acceptLabel:String = "Aceptar", cancelLabel:String = "Cancelar", onConfirm: () -> Unit, onDismiss: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -126,7 +131,7 @@ fun AcceptDeclineButtonItem(onConfirm: () -> Unit, onDismiss: () -> Unit) {
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                "Cancelar",
+                cancelLabel,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -140,10 +145,30 @@ fun AcceptDeclineButtonItem(onConfirm: () -> Unit, onDismiss: () -> Unit) {
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                "Aceptar",
+                acceptLabel,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
         }
     }
+}
+
+@Composable
+fun EditClientInfoRowItem(
+    value: String,
+    placeholder: String,
+    numberOnly: Boolean = false,
+    onValueChange: (String) -> Unit,
+) {
+    TextField(
+        value = if(numberOnly) value.filter { it.isDigit() } else value,
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(placeholder) },
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent
+        ),
+        keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+        singleLine = true,
+        maxLines = 1,
+        onValueChange = { onValueChange(it) })
 }

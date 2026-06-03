@@ -1,4 +1,4 @@
-package com.danucdev.fitnessmanager.ui.screens
+package com.danucdev.fitnessmanager.ui.screens.clients
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
