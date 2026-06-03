@@ -3,20 +3,20 @@ package com.danucdev.fitnessmanager.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,25 +26,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import com.danucdev.fitnessmanager.ui.core.AcceptDeclineButtonItem
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
 import com.danucdev.fitnessmanager.ui.core.ConfirmDialog
 import com.danucdev.fitnessmanager.ui.core.Header
-import com.danucdev.fitnessmanager.ui.navigation.BottomClientDetailsNavigationItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun ClientDetailsScreen() {
+fun ClientEditScreen() {
 
-    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var clientName by rememberSaveable { mutableStateOf("") }
+    var clientLastname by rememberSaveable { mutableStateOf("") }
+    var phoneNumber by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { ClientsBottomBar { showDialog = true } }
     ) { innerPadding ->
-
 
         Box(
             modifier = Modifier
@@ -53,7 +56,7 @@ fun ClientDetailsScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Información de cliente")
+                Header("Editar cliente")
                 BackIconButton {
                     //TODO WHEN NAVIGATION IS DONE
                 }
@@ -82,65 +85,45 @@ fun ClientDetailsScreen() {
                     )
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    DetailsRowItem("Nombres:", "Damian Nicolás")
-                    DetailsRowItem("Apellidos:", "Nuccio")
-                    DetailsRowItem("Teléfono:", "3571590020")
-                    DetailsRowItem("Último pago:", "26-06-2026")
+                    EditClientInfoRowItem(
+                        value = clientName,
+                        placeholder = "Nombres"
+                    ) { clientName = it }
+                    EditClientInfoRowItem(
+                        value = clientLastname,
+                        placeholder = "Apellido"
+                    ) { clientLastname = it }
+                    EditClientInfoRowItem(
+                        value = phoneNumber,
+                        placeholder = "Teléfono",
+                        numberOnly = true
+                    ) { phoneNumber = it }
+                }
+                Spacer(modifier = Modifier.size(32.dp))
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    AcceptDeclineButtonItem( onConfirm = {}, onDismiss = {})
                 }
             }
-            if (showDialog) {
-                ConfirmDialog(
-                    text = "Seguro que queres eliminar el cliente?",
-                    onConfirm = { showDialog = false },
-                    onDismiss = { showDialog = false }
-                )
-            }
-
         }
     }
 }
 
 @Composable
-private fun DetailsRowItem(label: String, description: String) {
-    Card(
-        Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-        elevation = CardDefaults.cardElevation(2.dp)
-    ) {
-        Row(
-            Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(label, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Text(
-                description,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Normal
-            )
-        }
-    }
+private fun EditClientInfoRowItem(
+    value: String,
+    placeholder: String,
+    numberOnly: Boolean = false,
+    onValueChange: (String) -> Unit,
+) {
+    TextField(
+        value = if(numberOnly) value.filter { it.isDigit() } else value,
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(placeholder) },
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent
+        ),
+        keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+        singleLine = true,
+        maxLines = 1,
+        onValueChange = { onValueChange(it) })
 }
-
-@Composable
-private fun ClientsBottomBar(onClick: () -> Unit) {
-
-    val navItemList = listOf(
-        BottomClientDetailsNavigationItem.Edit,
-        BottomClientDetailsNavigationItem.Message,
-        BottomClientDetailsNavigationItem.Delete
-    )
-
-    NavigationBar(containerColor = Color.Transparent) {
-        navItemList.forEach {
-            NavigationBarItem(
-                selected = false,
-                onClick = { onClick() },
-                icon = { Icon(it.icon, contentDescription = null) },
-                label = { Text(it.label) }
-            )
-        }
-    }
-}
-

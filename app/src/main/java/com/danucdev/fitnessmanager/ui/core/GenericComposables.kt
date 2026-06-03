@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -71,9 +73,13 @@ fun Header(label: String) {
 }
 
 @Composable
-fun BackIconButton(onClick:() -> Unit) {
+fun BackIconButton(onClick: () -> Unit) {
     IconButton(onClick = { onClick() }) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back button", tint = DarkAccentWhite)
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "back button",
+            tint = DarkAccentWhite
+        )
     }
 }
 
@@ -102,30 +108,42 @@ fun ConfirmDialog(text: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     color = DarkAccentWhite,
                     textAlign = TextAlign.Center
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Button(
-                        onClick = { onDismiss() },
-                        colors = ButtonDefaults.buttonColors(containerColor = DarkAccentGray),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Cancelar")
-                    }
-                    Button(
-                        onClick = { onConfirm() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = DarkAccentLime,
-                            contentColor = MainDark
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Aceptar")
-                    }
-                }
+                AcceptDeclineButtonItem(onConfirm, onDismiss)
             }
         }
     }
 }
 
+@Composable
+fun AcceptDeclineButtonItem(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Button(
+            onClick = { onDismiss() },
+            colors = ButtonDefaults.buttonColors(containerColor = DarkAccentGray),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                "Cancelar",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = { onConfirm() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = DarkAccentLime,
+                contentColor = MainDark
+            ),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                "Aceptar",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
