@@ -1,31 +1,46 @@
 package com.danucdev.fitnessmanager.ui.screens.clients
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +51,7 @@ import com.danucdev.fitnessmanager.ui.core.EditClientInfoRowItem
 import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
+import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
@@ -45,6 +61,8 @@ fun AddClientScreen() {
     var clientLastname by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
     var alreadyPay by rememberSaveable { mutableStateOf(true) }
+    var showDropdownMenuQuantity by rememberSaveable { mutableStateOf(false) }
+    var monthlyQuantityPaid by rememberSaveable { mutableIntStateOf(1) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -103,7 +121,57 @@ fun AddClientScreen() {
                     ) { phoneNumber = it }
                 }
                 CheckLabelItem("Ya pagó la cuota", alreadyPay) { alreadyPay = !alreadyPay }
-                Spacer(modifier = Modifier.size(32.dp))
+                AnimatedVisibility(alreadyPay) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            "Cantidad de cuotas pagas:",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Column {
+                            TextField(
+                                value = monthlyQuantityPaid.toString(), onValueChange = {}, enabled = false, trailingIcon = {
+                                    Icon(
+                                        Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null,
+                                        tint = DarkAccentWhite
+                                    )
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    disabledIndicatorColor = Color.Transparent,
+                                    disabledTextColor = DarkAccentWhite
+                                ),
+                                shape = RoundedCornerShape(4.dp),
+                                modifier = Modifier
+                                    .width(80.dp)
+                                    .clickable {
+                                        showDropdownMenuQuantity = true
+                                    }
+                            )
+                            DropdownMenu(
+                                expanded = showDropdownMenuQuantity,
+                                onDismissRequest = { showDropdownMenuQuantity = false },
+                                modifier = Modifier.height(150.dp)
+                            ) {
+                                (1..10).forEach {
+                                    DropdownMenuItem(
+                                        text = { Text(it.toString()) },
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                        onClick = {
+                                            showDropdownMenuQuantity = false
+                                            monthlyQuantityPaid = it
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+                Spacer(modifier = Modifier.size(16.dp))
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     AcceptDeclineButtonItem(acceptLabel = "Guardar", onConfirm = {}, onDismiss = {})
                 }
@@ -129,6 +197,10 @@ fun CheckLabelItem(label: String, checked: Boolean, onCheckedChange: () -> Unit)
                 checkmarkColor = MainDark
             )
         )
-        Text(label, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onPrimary)
+        Text(
+            label,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
 }
