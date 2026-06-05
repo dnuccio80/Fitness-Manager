@@ -29,13 +29,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
 import com.danucdev.fitnessmanager.ui.core.ConfirmDialog
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.navigation.BottomClientDetailsNavigationItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun ClientDetailsScreen() {
+fun ClientDetailsScreen(clientId: Int) {
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -53,7 +54,7 @@ fun ClientDetailsScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Información de cliente")
+                NormalHeader("Información de cliente")
                 BackIconButton {
                     //TODO WHEN NAVIGATION IS DONE
                 }

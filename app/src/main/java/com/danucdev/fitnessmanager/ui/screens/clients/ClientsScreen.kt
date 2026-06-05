@@ -29,7 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkButton
 import com.danucdev.fitnessmanager.ui.theme.MainDark
@@ -47,7 +48,7 @@ fun ClientsScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             LazyColumn(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                item { Header("Listado de clientes") }
+                item { NormalHeader("Listado de clientes") }
                 item {
                     Row(
                         Modifier.fillMaxWidth(),

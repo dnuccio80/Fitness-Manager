@@ -43,17 +43,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.R
-import com.danucdev.fitnessmanager.ui.core.AcceptDeclineButtonItem
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
 import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
+import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun AddClientScreen() {
+fun AddClientScreen(onBack: () -> Unit, onNavigateToConfig:() -> Unit) {
 
     var clientName by rememberSaveable { mutableStateOf("") }
     var clientLastname by rememberSaveable { mutableStateOf("") }
@@ -74,9 +75,9 @@ fun AddClientScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Agregar cliente")
+                NormalHeader("Agregar cliente")
                 BackIconButton {
-                    //TODO WHEN NAVIGATION IS DONE
+                    onBack()
                 }
                 Column(
                     Modifier.fillMaxWidth(),
@@ -130,7 +131,10 @@ fun AddClientScreen() {
                         )
                         Column {
                             TextField(
-                                value = monthlyQuantityPaid.toString(), onValueChange = {}, enabled = false, trailingIcon = {
+                                value = monthlyQuantityPaid.toString(),
+                                onValueChange = {},
+                                enabled = false,
+                                trailingIcon = {
                                     Icon(
                                         Icons.Default.KeyboardArrowDown,
                                         contentDescription = null,
@@ -156,7 +160,10 @@ fun AddClientScreen() {
                                 (1..10).forEach {
                                     DropdownMenuItem(
                                         text = { Text(it.toString()) },
-                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                        contentPadding = PaddingValues(
+                                            horizontal = 12.dp,
+                                            vertical = 0.dp
+                                        ),
                                         onClick = {
                                             showDropdownMenuQuantity = false
                                             monthlyQuantityPaid = it
@@ -169,10 +176,11 @@ fun AddClientScreen() {
 
                     }
                 }
-                Spacer(modifier = Modifier.size(16.dp))
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    AcceptDeclineButtonItem(acceptLabel = "Guardar", onConfirm = {}, onDismiss = {})
+                Spacer(modifier = Modifier.weight(1f))
+                MaxWidthButtonLime("Agregar cliente") {
+                    // TODO
                 }
+                Spacer(modifier = Modifier.size(16.dp))
             }
         }
     }

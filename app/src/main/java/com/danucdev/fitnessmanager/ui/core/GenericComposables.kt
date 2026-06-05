@@ -2,9 +2,11 @@ package com.danucdev.fitnessmanager.ui.core
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -45,7 +48,21 @@ import com.danucdev.fitnessmanager.ui.theme.DarkTextSecondary
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun Header(label: String) {
+fun MainHeader(onNavigateToConfig:() -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NormalHeader("Profe Elias")
+        Spacer(Modifier.weight(1f))
+        Icon(Icons.Filled.Settings, contentDescription = "Configuraciones", modifier = Modifier.clickable {
+            onNavigateToConfig()
+        })
+    }
+}
+
+@Composable
+fun NormalHeader(label:String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -191,4 +208,25 @@ fun TextFieldForSentencesItem(
         singleLine = true,
         maxLines = 1,
         onValueChange = { onValueChange(it) })
+}
+
+@Composable
+fun MaxWidthButtonLime(label:String, onClick: () -> Unit) {
+    Button(
+        onClick = { onClick() },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = DarkAccentLime,
+            contentColor = MainDark
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        shape = RoundedCornerShape(4.dp)
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }

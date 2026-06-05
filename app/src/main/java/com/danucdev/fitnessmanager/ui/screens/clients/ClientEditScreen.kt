@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.AcceptDeclineButtonItem
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
 import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
@@ -49,7 +50,7 @@ fun ClientEditScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Editar cliente")
+                NormalHeader("Editar cliente")
                 BackIconButton {
                     //TODO WHEN NAVIGATION IS DONE
                 }

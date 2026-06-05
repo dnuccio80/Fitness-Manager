@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,14 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
+import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.TextFieldForSentencesItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
-import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun InvestmentScreen() {
+fun InvestmentScreen(onBack: () -> Unit, onNavigateToConfig:() -> Unit) {
 
     var details by rememberSaveable { mutableStateOf("") }
     var amount by rememberSaveable { mutableStateOf("") }
@@ -49,9 +47,9 @@ fun InvestmentScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Agregar nuevo gasto")
+                NormalHeader("Agregar nuevo gasto")
                 BackIconButton {
-                    //TODO WHEN NAVIGATION IS DONE
+                    onBack()
                 }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,14 +80,7 @@ fun InvestmentScreen() {
                     onValueChange = { amount = it }
                 )
                 Spacer(Modifier.weight(1f))
-                Button(
-                    onClick = { },
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DarkAccentLime, contentColor = MainDark),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Agregar gasto", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                }
+                MaxWidthButtonLime("Agregar gasto") { }
                 Spacer(Modifier.size(16.dp))
 
             }

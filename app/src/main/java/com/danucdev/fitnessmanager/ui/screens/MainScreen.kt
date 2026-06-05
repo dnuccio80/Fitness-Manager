@@ -1,5 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,14 +31,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.R
-import com.danucdev.fitnessmanager.ui.core.Header
+import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
+import com.danucdev.fitnessmanager.ui.screens.TransactionSectionAction.*
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    navigateToPaymentReceived:() -> Unit,
+    navigateToAddClient:() -> Unit,
+    navigateToAddInvestment:() -> Unit,
+    navigateToConfig:() -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -50,9 +57,15 @@ fun MainScreen() {
                 .padding(horizontal = 16.dp)
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Header("Profe Elias")
+                MainHeader { navigateToConfig() }
                 DashboardCardItem()
-                TransactionSection()
+                TransactionSection { action ->
+                    when(action) {
+                        NEW_PAYMENT -> { navigateToPaymentReceived() }
+                        NEW_CLIENT -> { navigateToAddClient() }
+                        NEW_INVESTMENT -> { navigateToAddInvestment() }
+                    }
+                }
                 LastTransactionsSection()
             }
         }
@@ -63,9 +76,9 @@ fun MainScreen() {
 fun BottomBar() {
 
     val navItems = listOf(
+        BottomNavigationItem.Home,
         BottomNavigationItem.Clients,
         BottomNavigationItem.Transactions,
-        BottomNavigationItem.Config,
     )
 
     NavigationBar {
@@ -75,7 +88,7 @@ fun BottomBar() {
                 onClick = { },
                 icon = { Icon(painterResource(item.icon), contentDescription = "") },
                 label = { Text(item.label) },
-                colors =  NavigationBarItemDefaults.colors(
+                colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = DarkAccentLime,
                     selectedTextColor = DarkAccentLime
                 )
@@ -149,12 +162,18 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
-        Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
 
-            ) {
+                ) {
                 Card(
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(containerColor = DarkAccentLime)
@@ -163,12 +182,15 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
                 }
                 Text(label, style = MaterialTheme.typography.labelLarge)
             }
-            Text("$$amount", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = DarkAccentLime)
+            Text(
+                "$$amount",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = DarkAccentLime
+            )
         }
     }
 }
-
-
 
 
 @Composable
@@ -214,23 +236,39 @@ private fun DashboardCardItem() {
 }
 
 @Composable
-private fun TransactionSection() {
+private fun TransactionSection(onActionDone: (TransactionSectionAction) -> Unit) {
     LazyRow(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         item {
-            ActionCardItem("Nuevo cobro", painterResource(R.drawable.ic_earn))
+            ActionCardItem("Nuevo cobro", painterResource(R.drawable.ic_earn)) {
+                onActionDone(
+                    NEW_PAYMENT
+                )
+            }
         }
         item {
-            ActionCardItem("Nuevo cliente", painterResource(R.drawable.ic_person_add))
+            ActionCardItem("Nuevo cliente", painterResource(R.drawable.ic_person_add)) {
+                onActionDone(
+                    NEW_CLIENT
+                )
+            }
         }
         item {
-            ActionCardItem("Nuevo gasto", painterResource(R.drawable.ic_bag))
+            ActionCardItem("Nuevo gasto", painterResource(R.drawable.ic_bag)) {
+                onActionDone(
+                    NEW_INVESTMENT
+                )
+            }
         }
 
     }
+}
+
+enum class TransactionSectionAction {
+    NEW_PAYMENT, NEW_CLIENT, NEW_INVESTMENT
 }
 
 @Composable
@@ -250,9 +288,13 @@ private fun DetailsRowWithIcon(label: String, icon: Painter) {
 }
 
 @Composable
-private fun ActionCardItem(label: String, icon: Painter) {
+private fun ActionCardItem(label: String, icon: Painter, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(100.dp),
+        modifier = Modifier
+            .size(100.dp)
+            .clickable {
+                onClick()
+            },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(2.dp)
