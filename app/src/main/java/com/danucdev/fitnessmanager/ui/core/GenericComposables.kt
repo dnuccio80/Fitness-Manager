@@ -62,6 +62,14 @@ fun MainHeader(onNavigateToConfig:() -> Unit) {
 }
 
 @Composable
+fun ScreenHeader(label:String, onBack:() -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        BackIconButton { onBack() }
+        NormalHeader(label)
+    }
+}
+
+@Composable
 fun NormalHeader(label:String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
