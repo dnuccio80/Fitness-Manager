@@ -165,7 +165,6 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
             }
             Text("$$amount", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = DarkAccentLime)
         }
-
     }
 }
 
