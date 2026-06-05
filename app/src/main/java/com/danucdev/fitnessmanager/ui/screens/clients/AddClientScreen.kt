@@ -48,143 +48,71 @@ import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.NormalHeader
+import com.danucdev.fitnessmanager.ui.core.ScreenContainer
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun AddClientScreen(onBack: () -> Unit, onNavigateToConfig:() -> Unit) {
+fun AddClientScreen(onBack: () -> Unit) {
 
     var clientName by rememberSaveable { mutableStateOf("") }
     var clientLastname by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
     var alreadyPay by rememberSaveable { mutableStateOf(true) }
-    var showDropdownMenuQuantity by rememberSaveable { mutableStateOf(false) }
-    var monthlyQuantityPaid by rememberSaveable { mutableIntStateOf(1) }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-    ) { innerPadding ->
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+    ScreenContainer("Agregar cliente", onBack = { onBack() }) {
+        Column(
+            Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                NormalHeader("Agregar cliente")
-                BackIconButton {
-                    onBack()
-                }
-                Column(
-                    Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = DarkAccentLime,
-                            contentColor = MainDark
-                        ), shape = CircleShape
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.ic_person),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(16.dp)
-                        )
-                    }
-                    Text(
-                        "Nuevo Cliente",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TextFieldForNamesItem(
-                        value = clientName,
-                        placeholder = "Nombres"
-                    ) { clientName = it }
-                    TextFieldForNamesItem(
-                        value = clientLastname,
-                        placeholder = "Apellido"
-                    ) { clientLastname = it }
-                    TextFieldForNamesItem(
-                        value = phoneNumber,
-                        placeholder = "Teléfono",
-                        numberOnly = true
-                    ) { phoneNumber = it }
-                }
-                CheckLabelItem("Ya pagó la cuota", alreadyPay) { alreadyPay = !alreadyPay }
-                AnimatedVisibility(alreadyPay) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            "Cantidad de cuotas pagas:",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        Column {
-                            TextField(
-                                value = monthlyQuantityPaid.toString(),
-                                onValueChange = {},
-                                enabled = false,
-                                trailingIcon = {
-                                    Icon(
-                                        Icons.Default.KeyboardArrowDown,
-                                        contentDescription = null,
-                                        tint = DarkAccentWhite
-                                    )
-                                },
-                                colors = TextFieldDefaults.colors(
-                                    disabledIndicatorColor = Color.Transparent,
-                                    disabledTextColor = DarkAccentWhite
-                                ),
-                                shape = RoundedCornerShape(4.dp),
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .clickable {
-                                        showDropdownMenuQuantity = true
-                                    }
-                            )
-                            DropdownMenu(
-                                expanded = showDropdownMenuQuantity,
-                                onDismissRequest = { showDropdownMenuQuantity = false },
-                                modifier = Modifier.height(150.dp)
-                            ) {
-                                (1..10).forEach {
-                                    DropdownMenuItem(
-                                        text = { Text(it.toString()) },
-                                        contentPadding = PaddingValues(
-                                            horizontal = 12.dp,
-                                            vertical = 0.dp
-                                        ),
-                                        onClick = {
-                                            showDropdownMenuQuantity = false
-                                            monthlyQuantityPaid = it
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-
-                    }
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                MaxWidthButtonLime("Agregar cliente") {
-                    // TODO
-                }
-                Spacer(modifier = Modifier.size(16.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = DarkAccentLime,
+                    contentColor = MainDark
+                ), shape = CircleShape
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_person),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(128.dp)
+                        .padding(16.dp)
+                )
             }
+            Text(
+                "Nuevo Cliente",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextFieldForNamesItem(
+                value = clientName,
+                placeholder = "Nombres"
+            ) { clientName = it }
+            TextFieldForNamesItem(
+                value = clientLastname,
+                placeholder = "Apellido"
+            ) { clientLastname = it }
+            TextFieldForNamesItem(
+                value = phoneNumber,
+                placeholder = "Teléfono",
+                numberOnly = true
+            ) { phoneNumber = it }
+            CheckLabelItem("Ya pagó la cuota", alreadyPay) { alreadyPay = !alreadyPay }
+            Spacer(modifier = Modifier.weight(1f))
+            MaxWidthButtonLime("Agregar cliente") {
+
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+
     }
 }
+
 
 @Composable
 fun CheckLabelItem(label: String, checked: Boolean, onCheckedChange: () -> Unit) {

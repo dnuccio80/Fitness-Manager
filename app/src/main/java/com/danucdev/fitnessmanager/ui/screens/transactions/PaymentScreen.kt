@@ -45,9 +45,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
-import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.NormalHeader
+import com.danucdev.fitnessmanager.ui.core.ScreenContainer
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 
@@ -58,128 +58,108 @@ fun PaymentsScreen(onBack: () -> Unit) {
     var clientSelected by rememberSaveable { mutableStateOf("") }
     var clientQuery by rememberSaveable { mutableStateOf("") }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+    ScreenContainer("Agregar nuevo cobro", onBack = { onBack() }) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                NormalHeader("Agregar nuevo cobro")
-                BackIconButton {
-                    onBack()
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "Agendar nuevo cobro",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                    )
-                    HorizontalDivider(
-                        thickness = 1.5.dp,
-                        color = DarkAccentLime,
-                        modifier = Modifier.padding(horizontal = 75.dp)
-                    )
-                }
-                Spacer(Modifier.size(16.dp))
-                ClientSelector(
-                    clientSelected = clientSelected,
-                    openClientMenu = openClientMenu,
-                    clientQuery = clientQuery,
-                ) { action, value ->
-                    when (action) {
-                        ClientSelectorActions.DISMISS -> {
-                            openClientMenu = false
-                            clientQuery = ""
-                        }
-
-                        ClientSelectorActions.CLIENT_SELECTED -> {
-                            openClientMenu = false
-                            clientSelected = value.orEmpty()
-                            clientQuery = ""
-                        }
-
-                        ClientSelectorActions.OPEN_CLIENT_MENU -> openClientMenu = true
-                        ClientSelectorActions.MODIFY_QUERY_CLIENT -> clientQuery = value.orEmpty()
-                    }
-                }
-                PaymentSelector()
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(4.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
-                    ) {
-                        Row(
-                            Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Cuota mensual", style = MaterialTheme.typography.labelLarge)
-                            Text(
-                                "$40.000",
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = DarkAccentLime
-                            )
-                        }
-                    }
-                    Spacer(Modifier.size(8.dp))
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = "Eliminar item",
-                        Modifier
-                            .weight(.1f)
-                            .clickable {
-                                // DELETE ITEM
-                            })
-                }
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Button(
-                            onClick = { },
-                            shape = RoundedCornerShape(8.dp)
-                        ) { Text("Agregar item") }
-                        Spacer(Modifier.size(0.dp))
-                        Text(
-                            "Total: $40.000",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = DarkAccentLime
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        MaxWidthButtonLime("Agregar Pago") {
-                            // TODO
-                        }
-                        Spacer(modifier = Modifier.size(16.dp))
-                    }
-
+            Text(
+                "Agendar nuevo cobro",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
+            HorizontalDivider(
+                thickness = 1.5.dp,
+                color = DarkAccentLime,
+                modifier = Modifier.padding(horizontal = 75.dp)
+            )
+        }
+        Spacer(Modifier.size(16.dp))
+        ClientSelector(
+            clientSelected = clientSelected,
+            openClientMenu = openClientMenu,
+            clientQuery = clientQuery,
+        ) { action, value ->
+            when (action) {
+                ClientSelectorActions.DISMISS -> {
+                    openClientMenu = false
+                    clientQuery = ""
                 }
 
+                ClientSelectorActions.CLIENT_SELECTED -> {
+                    openClientMenu = false
+                    clientSelected = value.orEmpty()
+                    clientQuery = ""
+                }
+
+                ClientSelectorActions.OPEN_CLIENT_MENU -> openClientMenu = true
+                ClientSelectorActions.MODIFY_QUERY_CLIENT -> clientQuery = value.orEmpty()
             }
         }
-
+        PaymentSelector()
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
+            ) {
+                Row(
+                    Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Cuota mensual", style = MaterialTheme.typography.labelLarge)
+                    Text(
+                        "$40.000",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = DarkAccentLime
+                    )
+                }
+            }
+            Spacer(Modifier.size(8.dp))
+            Icon(
+                Icons.Filled.Delete,
+                contentDescription = "Eliminar item",
+                Modifier
+                    .weight(.1f)
+                    .clickable {
+                        // DELETE ITEM
+                    })
+        }
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    onClick = { },
+                    shape = RoundedCornerShape(8.dp)
+                ) { Text("Agregar item") }
+                Spacer(Modifier.size(0.dp))
+                Text(
+                    "Total: $40.000",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = DarkAccentLime
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                MaxWidthButtonLime("Agregar Pago") {
+                    // TODO
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+        }
     }
 }
-
 
 
 @Composable

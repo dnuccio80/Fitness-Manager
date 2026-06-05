@@ -4,7 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -47,30 +50,49 @@ import com.danucdev.fitnessmanager.ui.theme.DarkTextPrimary
 import com.danucdev.fitnessmanager.ui.theme.DarkTextSecondary
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
+
 @Composable
-fun MainHeader(onNavigateToConfig:() -> Unit) {
+fun ScreenContainer(headerLabel:String, onBack: ColumnScope.() -> Unit, content: @Composable () -> Unit) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                NormalHeader(headerLabel)
+                BackIconButton {
+                    onBack()
+                }
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+fun MainHeader(onNavigateToConfig: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         NormalHeader("Profe Elias")
         Spacer(Modifier.weight(1f))
-        Icon(Icons.Filled.Settings, contentDescription = "Configuraciones", modifier = Modifier.clickable {
-            onNavigateToConfig()
-        })
+        Icon(
+            Icons.Filled.Settings,
+            contentDescription = "Configuraciones",
+            modifier = Modifier.clickable {
+                onNavigateToConfig()
+            })
     }
 }
 
 @Composable
-fun ScreenHeader(label:String, onBack:() -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        BackIconButton { onBack() }
-        NormalHeader(label)
-    }
-}
-
-@Composable
-fun NormalHeader(label:String) {
+fun NormalHeader(label: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -138,14 +160,19 @@ fun ConfirmDialog(text: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     color = DarkAccentWhite,
                     textAlign = TextAlign.Center
                 )
-                AcceptDeclineButtonItem(onConfirm = onConfirm, onDismiss =  onDismiss)
+                AcceptDeclineButtonItem(onConfirm = onConfirm, onDismiss = onDismiss)
             }
         }
     }
 }
 
 @Composable
-fun AcceptDeclineButtonItem(acceptLabel:String = "Aceptar", cancelLabel:String = "Cancelar", onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun AcceptDeclineButtonItem(
+    acceptLabel: String = "Aceptar",
+    cancelLabel: String = "Cancelar",
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -186,13 +213,15 @@ fun TextFieldForNamesItem(
     onValueChange: (String) -> Unit,
 ) {
     TextField(
-        value = if(numberOnly) value.filter { it.isDigit() } else value,
+        value = if (numberOnly) value.filter { it.isDigit() } else value,
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(placeholder) },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.Transparent
         ),
-        keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+        keyboardOptions = if (numberOnly) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(
+            capitalization = KeyboardCapitalization.Words
+        ),
         singleLine = true,
         maxLines = 1,
         onValueChange = { onValueChange(it) })
@@ -206,20 +235,22 @@ fun TextFieldForSentencesItem(
     onValueChange: (String) -> Unit,
 ) {
     TextField(
-        value = if(numberOnly) value.filter { it.isDigit() } else value,
+        value = if (numberOnly) value.filter { it.isDigit() } else value,
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(placeholder) },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.Transparent
         ),
-        keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        keyboardOptions = if (numberOnly) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences
+        ),
         singleLine = true,
         maxLines = 1,
         onValueChange = { onValueChange(it) })
 }
 
 @Composable
-fun MaxWidthButtonLime(label:String, onClick: () -> Unit) {
+fun MaxWidthButtonLime(label: String, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(

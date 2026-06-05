@@ -57,13 +57,8 @@ class MainActivity : ComponentActivity() {
                         }
                         entry<Clients> { ClientsScreen() }
                         entry<Payment> { PaymentsScreen { backStack.back() } }
-                        entry<AddClient> { AddClientScreen(onBack = { backStack.back() }, onNavigateToConfig = { backStack.navigateTo(
-                            Config) })  }
-                        entry<Investment> {
-                            InvestmentScreen(
-                                onBack = { backStack.back() },
-                                onNavigateToConfig = { backStack.navigateTo(Config) })
-                        }
+                        entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
+                        entry<Investment> { InvestmentScreen(onBack = { backStack.back() }) }
                         entry<ClientDetails> { key -> ClientDetailsScreen(key.clientId) }
                         entry<Config> { SettingsScreen { backStack.back() } }
                     },
