@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -47,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.R
 import com.danucdev.fitnessmanager.ui.core.AcceptDeclineButtonItem
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
-import com.danucdev.fitnessmanager.ui.core.EditClientInfoRowItem
+import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
@@ -106,15 +104,15 @@ fun AddClientScreen() {
                     )
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = clientName,
                         placeholder = "Nombres"
                     ) { clientName = it }
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = clientLastname,
                         placeholder = "Apellido"
                     ) { clientLastname = it }
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = phoneNumber,
                         placeholder = "Teléfono",
                         numberOnly = true

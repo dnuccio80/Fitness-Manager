@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,14 +21,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.danucdev.fitnessmanager.ui.core.AcceptDeclineButtonItem
 import com.danucdev.fitnessmanager.ui.core.BackIconButton
-import com.danucdev.fitnessmanager.ui.core.EditClientInfoRowItem
+import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.Header
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.MainDark
@@ -84,15 +78,15 @@ fun ClientEditScreen() {
                     )
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = clientName,
                         placeholder = "Nombres"
                     ) { clientName = it }
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = clientLastname,
                         placeholder = "Apellido"
                     ) { clientLastname = it }
-                    EditClientInfoRowItem(
+                    TextFieldForNamesItem(
                         value = phoneNumber,
                         placeholder = "Teléfono",
                         numberOnly = true

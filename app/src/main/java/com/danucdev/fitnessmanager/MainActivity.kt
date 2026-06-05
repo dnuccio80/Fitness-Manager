@@ -8,9 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.danucdev.fitnessmanager.ui.screens.MainScreen
-import com.danucdev.fitnessmanager.ui.screens.clients.AddClientScreen
-import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen
+import com.danucdev.fitnessmanager.ui.screens.investment.InvestmentScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +19,7 @@ class MainActivity : ComponentActivity() {
             var isDarkTheme by rememberSaveable { mutableStateOf(true) }
 
             FitnessManagerTheme(darkTheme = isDarkTheme) {
-                PaymentsScreen()
+                InvestmentScreen()
             }
         }
     }

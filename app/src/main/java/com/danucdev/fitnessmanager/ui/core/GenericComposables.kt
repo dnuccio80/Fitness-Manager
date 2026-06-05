@@ -154,7 +154,7 @@ fun AcceptDeclineButtonItem(acceptLabel:String = "Aceptar", cancelLabel:String =
 }
 
 @Composable
-fun EditClientInfoRowItem(
+fun TextFieldForNamesItem(
     value: String,
     placeholder: String,
     numberOnly: Boolean = false,
@@ -168,6 +168,26 @@ fun EditClientInfoRowItem(
             unfocusedContainerColor = Color.Transparent
         ),
         keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+        singleLine = true,
+        maxLines = 1,
+        onValueChange = { onValueChange(it) })
+}
+
+@Composable
+fun TextFieldForSentencesItem(
+    value: String,
+    placeholder: String,
+    numberOnly: Boolean = false,
+    onValueChange: (String) -> Unit,
+) {
+    TextField(
+        value = if(numberOnly) value.filter { it.isDigit() } else value,
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(placeholder) },
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent
+        ),
+        keyboardOptions = if(numberOnly)KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
         singleLine = true,
         maxLines = 1,
         onValueChange = { onValueChange(it) })
