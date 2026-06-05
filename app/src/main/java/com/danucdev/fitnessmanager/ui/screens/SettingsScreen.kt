@@ -21,7 +21,6 @@ fun SettingsScreen(onBack: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { BottomBar() }
     ) { innerPadding ->
         Box(
             modifier = Modifier
