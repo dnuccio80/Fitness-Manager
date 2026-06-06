@@ -30,9 +30,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
+import com.danucdev.fitnessmanager.ui.navigation.NavRoutes
 import com.danucdev.fitnessmanager.ui.screens.TransactionSectionAction.*
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
@@ -40,15 +42,17 @@ import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
 fun MainScreen(
-    navigateToPaymentReceived:() -> Unit,
-    navigateToAddClient:() -> Unit,
-    navigateToAddInvestment:() -> Unit,
-    navigateToConfig:() -> Unit,
+    navigateToPaymentReceived: () -> Unit,
+    navigateToAddClient: () -> Unit,
+    navigateToAddInvestment: () -> Unit,
+    navigateToConfig: () -> Unit,
+    navigateToBottomBarAction: (NavKey) -> Unit,
+    currentRoute: NavKey,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(currentRoute) { route -> navigateToBottomBarAction(route) } }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -60,10 +64,18 @@ fun MainScreen(
                 MainHeader { navigateToConfig() }
                 DashboardCardItem()
                 TransactionSection { action ->
-                    when(action) {
-                        NEW_PAYMENT -> { navigateToPaymentReceived() }
-                        NEW_CLIENT -> { navigateToAddClient() }
-                        NEW_INVESTMENT -> { navigateToAddInvestment() }
+                    when (action) {
+                        NEW_PAYMENT -> {
+                            navigateToPaymentReceived()
+                        }
+
+                        NEW_CLIENT -> {
+                            navigateToAddClient()
+                        }
+
+                        NEW_INVESTMENT -> {
+                            navigateToAddInvestment()
+                        }
                     }
                 }
                 LastTransactionsSection()
@@ -73,7 +85,7 @@ fun MainScreen(
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(currentRoute: NavKey, onClick: (NavKey) -> Unit) {
 
     val navItems = listOf(
         BottomNavigationItem.Home,
@@ -84,8 +96,8 @@ fun BottomBar() {
     NavigationBar {
         navItems.forEach { item ->
             NavigationBarItem(
-                selected = true,
-                onClick = { },
+                selected = currentRoute == item.route,
+                onClick = { onClick(item.route) },
                 icon = { Icon(painterResource(item.icon), contentDescription = "") },
                 label = { Text(item.label) },
                 colors = NavigationBarItemDefaults.colors(
@@ -94,7 +106,6 @@ fun BottomBar() {
                 )
             )
         }
-
     }
 
 }

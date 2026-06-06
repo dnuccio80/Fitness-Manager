@@ -29,17 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.core.NormalHeader
+import com.danucdev.fitnessmanager.ui.screens.BottomBar
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkButton
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
-fun ClientsScreen() {
+fun ClientsScreen(currentRoute: NavKey, onBottomBarClick: (NavKey) -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = { BottomBar(currentRoute) { route -> onBottomBarClick(route) } }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -50,57 +53,39 @@ fun ClientsScreen() {
             LazyColumn(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { NormalHeader("Listado de clientes") }
                 item {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    Button(
+                        onClick = {},
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = DarkButton
+                        )
                     ) {
-                        Button(
-                            onClick = {},
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = DarkButton
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "",
-                                    modifier = Modifier.size(18.dp)
-                                )
-                                Text("Volver", style = MaterialTheme.typography.labelMedium)
-                            }
-                        }
-                        Button(
-                            onClick = {},
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = DarkButton
+                            Text("Ver todos", style = MaterialTheme.typography.labelMedium)
+                            Icon(
+                                Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "",
+                                modifier = Modifier.size(18.dp)
                             )
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Text("Ver todos", style = MaterialTheme.typography.labelMedium)
-                                Icon(
-                                    Icons.Filled.KeyboardArrowDown,
-                                    contentDescription = "",
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
                         }
                     }
                 }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("Ya pagaron el mes (100)", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                        HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = DarkAccentLime)
+                        Text(
+                            "Ya pagaron el mes (100)",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        HorizontalDivider(
+                            Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = DarkAccentLime
+                        )
                     }
                 }
                 items(10) {
@@ -108,8 +93,16 @@ fun ClientsScreen() {
                 }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("Pendientes de pago (20)", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                        HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = DarkAccentLime)
+                        Text(
+                            "Pendientes de pago (20)",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        HorizontalDivider(
+                            Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = DarkAccentLime
+                        )
                     }
                 }
                 items(10) {
@@ -117,8 +110,16 @@ fun ClientsScreen() {
                 }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("Inactivos (80)", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                        HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = DarkAccentLime)
+                        Text(
+                            "Inactivos (80)",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        HorizontalDivider(
+                            Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = DarkAccentLime
+                        )
                     }
                 }
                 items(10) {
@@ -144,8 +145,19 @@ private fun ClientRowItem() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Card(shape = CircleShape, colors = CardDefaults.cardColors(containerColor = DarkAccentLime, contentColor = MainDark)) {
-                Text("DN", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(4.dp))
+            Card(
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(
+                    containerColor = DarkAccentLime,
+                    contentColor = MainDark
+                )
+            ) {
+                Text(
+                    "DN",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(4.dp)
+                )
             }
             Text(
                 "Damian Nuccio",

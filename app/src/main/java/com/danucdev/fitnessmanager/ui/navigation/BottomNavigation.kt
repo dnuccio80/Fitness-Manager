@@ -7,10 +7,10 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.danucdev.fitnessmanager.R
 
-sealed class BottomNavigationItem(val label: String,val icon: Int) {
-    data object Home: BottomNavigationItem("Inicio", R.drawable.ic_home)
-    data object Clients: BottomNavigationItem("Clientes", R.drawable.ic_person)
-    data object Transactions: BottomNavigationItem("Transacciones", R.drawable.ic_wallet)
+sealed class BottomNavigationItem(val label: String,val icon: Int, val route: NavRoutes) {
+    data object Home: BottomNavigationItem("Inicio", R.drawable.ic_home, NavRoutes.Main)
+    data object Clients: BottomNavigationItem("Clientes", R.drawable.ic_person, NavRoutes.Clients)
+    data object Transactions: BottomNavigationItem("Transacciones", R.drawable.ic_wallet, NavRoutes.Transactions)
 }
 
 sealed class BottomClientDetailsNavigationItem(val label:String, val icon: ImageVector) {
