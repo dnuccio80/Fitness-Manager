@@ -36,7 +36,9 @@ import com.danucdev.fitnessmanager.ui.screens.investment.InvestmentScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.TransactionsScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
