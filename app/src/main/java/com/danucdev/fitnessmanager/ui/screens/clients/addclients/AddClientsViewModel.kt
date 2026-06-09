@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.danucdev.fitnessmanager.domain.usecases.clients.AddClientUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,6 +20,9 @@ class AddClientsViewModel @Inject constructor(
 
     private val _clientData = MutableStateFlow(ClientData())
     val clientData = _clientData.asStateFlow()
+
+    private val _events = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     fun updateClientName(newValue:String) {
         _clientData.update {current ->
@@ -47,6 +52,7 @@ class AddClientsViewModel @Inject constructor(
         if(isAllData()) {
             viewModelScope.launch(Dispatchers.IO) {
                 addClientUseCase(_clientData.value.toClient())
+                _events.emit("Cliente guardado con éxito!")
                 cleanData()
             }
         } else{
