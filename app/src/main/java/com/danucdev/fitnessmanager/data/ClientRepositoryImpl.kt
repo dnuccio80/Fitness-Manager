@@ -1,8 +1,8 @@
 package com.danucdev.fitnessmanager.data
 
 import com.danucdev.fitnessmanager.data.dao.ClientDao
-import com.danucdev.fitnessmanager.domain.ClientRepository
 import com.danucdev.fitnessmanager.domain.models.Client
+import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

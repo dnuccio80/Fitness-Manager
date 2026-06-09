@@ -2,8 +2,8 @@ package com.danucdev.fitnessmanager.ui.screens.tests
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.danucdev.fitnessmanager.domain.ClientRepository
 import com.danucdev.fitnessmanager.domain.models.Client
+import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

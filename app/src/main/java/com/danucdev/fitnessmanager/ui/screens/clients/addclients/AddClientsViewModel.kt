@@ -1,16 +1,20 @@
 package com.danucdev.fitnessmanager.ui.screens.clients.addclients
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.danucdev.fitnessmanager.domain.usecases.clients.AddClientUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddClientsViewModel @Inject constructor(): ViewModel() {
+class AddClientsViewModel @Inject constructor(
+    private val addClientUseCase: AddClientUseCase
+): ViewModel() {
 
     private val _clientData = MutableStateFlow(ClientData())
     val clientData = _clientData.asStateFlow()
@@ -41,9 +45,9 @@ class AddClientsViewModel @Inject constructor(): ViewModel() {
 
     fun addClient() {
         if(isAllData()) {
-            // ADD CLIENT
-            _clientData.update { current ->
-                current.copy(allData = true)
+            viewModelScope.launch(Dispatchers.IO) {
+                addClientUseCase(_clientData.value.toClient())
+                cleanData()
             }
         } else{
             _clientData.update { current ->
@@ -52,7 +56,14 @@ class AddClientsViewModel @Inject constructor(): ViewModel() {
         }
     }
 
-    fun isAllData(): Boolean {
+    private fun isAllData(): Boolean {
         return _clientData.value.name.isNotBlank() && _clientData.value.lastName.isNotBlank() && _clientData.value.phoneNUmber.isNotBlank()
     }
+
+    private fun cleanData() {
+        _clientData.update { current ->
+            current.copy(name = "", lastName = "", phoneNUmber = "", alreadyPay = true, allData = true)
+        }
+    }
+
 }

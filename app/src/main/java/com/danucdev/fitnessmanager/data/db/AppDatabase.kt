@@ -7,7 +7,8 @@ import com.danucdev.fitnessmanager.data.entities.ClientEntity
 
 @Database(
     entities = [ClientEntity::class],
-    version = 1
+    version = 1,
+    exportSchema = true
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract val clientDao: ClientDao

@@ -3,7 +3,7 @@ package com.danucdev.fitnessmanager.domain.models
 import com.danucdev.fitnessmanager.data.entities.ClientEntity
 
 data class Client(
-    val clientId:Int,
+    val clientId:Int = 0,
     val name:String,
     val phone:String
 ) {
