@@ -18,7 +18,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.danucdev.fitnessmanager.ui.core.ex.back
 import com.danucdev.fitnessmanager.ui.core.ex.backTo
 import com.danucdev.fitnessmanager.ui.core.ex.navigateTo
-import com.danucdev.fitnessmanager.ui.navigation.NavRoutes
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.AddClient
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.ClientDetails
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Clients
@@ -29,9 +28,8 @@ import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Payment
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Transactions
 import com.danucdev.fitnessmanager.ui.screens.MainScreen
 import com.danucdev.fitnessmanager.ui.screens.SettingsScreen
-import com.danucdev.fitnessmanager.ui.screens.clients.AddClientScreen
+import com.danucdev.fitnessmanager.ui.screens.clients.addclients.AddClientScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.ClientDetailsScreen
-import com.danucdev.fitnessmanager.ui.screens.clients.ClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.investment.InvestmentScreen
 import com.danucdev.fitnessmanager.ui.screens.tests.TestingClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen

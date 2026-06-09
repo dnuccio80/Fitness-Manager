@@ -75,6 +75,11 @@ fun ScreenContainer(headerLabel:String, onBack: ColumnScope.() -> Unit, content:
 }
 
 @Composable
+fun ErrorText(text:String) {
+    Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+}
+
+@Composable
 fun MainHeader(onNavigateToConfig: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
