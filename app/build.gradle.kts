@@ -66,6 +66,7 @@ dependencies {
 
     //Hilt
     implementation(libs.dagger.hilt)
+    implementation(libs.hilt.lifecycle.viewmodel.compose)
     ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)

@@ -2,7 +2,7 @@ package com.danucdev.fitnessmanager
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-class Application: Application() {
-}
+class FitnessApplication @Inject constructor(): Application()

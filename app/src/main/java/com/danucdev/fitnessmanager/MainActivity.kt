@@ -33,6 +33,7 @@ import com.danucdev.fitnessmanager.ui.screens.clients.AddClientScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.ClientDetailsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.ClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.investment.InvestmentScreen
+import com.danucdev.fitnessmanager.ui.screens.tests.TestingClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.TransactionsScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
@@ -63,7 +64,8 @@ class MainActivity : ComponentActivity() {
                                 currentRoute
                             )
                         }
-                        entry<Clients> { ClientsScreen(currentRoute) { target -> backStack.backTo(target) } }
+//                        entry<Clients> { ClientsScreen(currentRoute) { target -> backStack.backTo(target) } }
+                        entry<Clients> { TestingClientsScreen { backStack.back()} }
                         entry<Payment> { PaymentsScreen { backStack.back() } }
                         entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
                         entry<Investment> { InvestmentScreen(onBack = { backStack.back() }) }
