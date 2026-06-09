@@ -1,4 +1,4 @@
-package com.danucdev.fitnessmanager.data
+package com.danucdev.fitnessmanager.data.impl
 
 import com.danucdev.fitnessmanager.data.dao.ClientDao
 import com.danucdev.fitnessmanager.domain.models.Client

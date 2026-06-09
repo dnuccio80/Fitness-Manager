@@ -2,10 +2,13 @@ package com.danucdev.fitnessmanager.di
 
 import android.content.Context
 import androidx.room.Room
-import com.danucdev.fitnessmanager.data.ClientRepositoryImpl
+import com.danucdev.fitnessmanager.data.impl.ClientRepositoryImpl
 import com.danucdev.fitnessmanager.data.dao.ClientDao
+import com.danucdev.fitnessmanager.data.dao.TransactionDao
 import com.danucdev.fitnessmanager.data.db.AppDatabase
+import com.danucdev.fitnessmanager.data.impl.TransactionRepositoryImpl
 import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
+import com.danucdev.fitnessmanager.domain.repositories.TransactionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +42,18 @@ object Module {
     @Singleton
     fun provideClientRepository(clientRepositoryImpl: ClientRepositoryImpl): ClientRepository {
         return clientRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionDao(appDatabase: AppDatabase): TransactionDao {
+        return appDatabase.transactionDao
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(transactionRepositoryImpl: TransactionRepositoryImpl): TransactionRepository {
+        return transactionRepositoryImpl
     }
 
 }
