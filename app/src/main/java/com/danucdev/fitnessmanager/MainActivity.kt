@@ -26,14 +26,14 @@ import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Investment
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Main
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Payment
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Transactions
-import com.danucdev.fitnessmanager.ui.screens.MainScreen
-import com.danucdev.fitnessmanager.ui.screens.SettingsScreen
+import com.danucdev.fitnessmanager.ui.screens.main.MainScreen
+import com.danucdev.fitnessmanager.ui.screens.settings.SettingsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.addclients.AddClientScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.ClientDetailsScreen
-import com.danucdev.fitnessmanager.ui.screens.investment.InvestmentScreen
+import com.danucdev.fitnessmanager.ui.screens.transactions.expenses.ExpensesScreen
 import com.danucdev.fitnessmanager.ui.screens.tests.TestingClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen
-import com.danucdev.fitnessmanager.ui.screens.transactions.TransactionsScreen
+import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         entry<Clients> { TestingClientsScreen { backStack.back()} }
                         entry<Payment> { PaymentsScreen { backStack.back() } }
                         entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
-                        entry<Investment> { InvestmentScreen(onBack = { backStack.back() }) }
+                        entry<Investment> { ExpensesScreen(onBack = { backStack.back() }) }
                         entry<ClientDetails> { key -> ClientDetailsScreen(key.clientId) }
                         entry<Config> { SettingsScreen { backStack.back() } }
                         entry<Transactions> { TransactionsScreen(currentRoute) { target -> backStack.backTo(target) } }

@@ -1,42 +1,37 @@
-package com.danucdev.fitnessmanager.ui.screens.investment
+package com.danucdev.fitnessmanager.ui.screens.transactions.expenses
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.danucdev.fitnessmanager.ui.core.BackIconButton
-import com.danucdev.fitnessmanager.ui.core.MainHeader
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.danucdev.fitnessmanager.ui.core.ErrorText
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
-import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
 import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.TextFieldForSentencesItem
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 
 @Composable
-fun InvestmentScreen(onBack: () -> Unit) {
+fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel(), onBack: () -> Unit) {
 
-    var details by rememberSaveable { mutableStateOf("") }
-    var amount by rememberSaveable { mutableStateOf("") }
+    val expenseData by viewModel.expenseData.collectAsStateWithLifecycle()
 
     ScreenContainer("Agregar nuevo gasto", onBack = { onBack() }) {
         Column(
@@ -57,19 +52,22 @@ fun InvestmentScreen(onBack: () -> Unit) {
         }
         Spacer(Modifier.size(16.dp))
         TextFieldForSentencesItem(
-            value = details,
+            value = expenseData.details,
             placeholder = "Detalle..",
-            onValueChange = { details = it }
+            onValueChange = { viewModel.updateDetails(it) }
         )
         TextFieldForNamesItem(
-            value = amount,
+            value = expenseData.amount,
             placeholder = "Monto..",
             numberOnly = true,
-            onValueChange = { amount = it }
+            onValueChange = { viewModel.updateAmount(it) }
         )
+        AnimatedVisibility(!expenseData.isAllData) {
+            ErrorText("Faltan datos por completar!")
+        }
         Column {
             Spacer(Modifier.weight(1f))
-            MaxWidthButtonLime("Agregar gasto") { }
+            MaxWidthButtonLime("Agregar gasto") { viewModel.addExpense() }
             Spacer(Modifier.size(16.dp))
         }
     }

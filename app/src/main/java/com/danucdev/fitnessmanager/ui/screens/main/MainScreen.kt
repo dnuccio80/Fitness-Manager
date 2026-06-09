@@ -1,4 +1,4 @@
-package com.danucdev.fitnessmanager.ui.screens
+package com.danucdev.fitnessmanager.ui.screens.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,8 +34,7 @@ import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
-import com.danucdev.fitnessmanager.ui.navigation.NavRoutes
-import com.danucdev.fitnessmanager.ui.screens.TransactionSectionAction.*
+import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.*
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark

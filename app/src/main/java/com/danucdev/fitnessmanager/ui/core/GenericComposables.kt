@@ -42,7 +42,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.ui.screens.main.BottomBar
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
@@ -52,7 +54,11 @@ import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 
 @Composable
-fun ScreenContainer(headerLabel:String, onBack: ColumnScope.() -> Unit, content: @Composable () -> Unit) {
+fun ScreenContainer(
+    headerLabel: String,
+    onBack: ColumnScope.() -> Unit,
+    content: @Composable () -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -75,7 +81,35 @@ fun ScreenContainer(headerLabel:String, onBack: ColumnScope.() -> Unit, content:
 }
 
 @Composable
-fun ErrorText(text:String) {
+fun ScreenContainerWithBottomBar(
+    headerLabel: String,
+    currentRoute: NavKey,
+    onBottomBarClick: (NavKey) -> Unit,
+    content: @Composable () -> Unit,
+) {
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = { BottomBar(currentRoute) { route -> onBottomBarClick(route) } }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                NormalHeader(headerLabel)
+                content()
+            }
+        }
+    }
+
+}
+
+@Composable
+fun ErrorText(text: String) {
     Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
 }
 

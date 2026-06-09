@@ -5,6 +5,6 @@ import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetClientById @Inject constructor(private val repository: ClientRepository) {
+class GetClientByIdUseCase @Inject constructor(private val repository: ClientRepository) {
     operator fun invoke(clientId:Int): Flow<Client> = repository.getClientById(clientId)
 }
