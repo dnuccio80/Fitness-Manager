@@ -1,8 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist
 
-import android.R
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +27,9 @@ import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.domain.models.Transaction
 import com.danucdev.fitnessmanager.ui.core.ScreenContainerWithBottomBar
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
-import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
+import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.*
+import com.danucdev.fitnessmanager.ui.theme.AccentColor
+import com.danucdev.fitnessmanager.ui.theme.ErrorContainer
 
 @Composable
 fun TransactionsScreen(
@@ -39,31 +39,39 @@ fun TransactionsScreen(
 ) {
 
     val transactions by viewModel.transactions.collectAsStateWithLifecycle()
+    val viewMode by viewModel.transactionsViewMode.collectAsStateWithLifecycle()
+
     ScreenContainerWithBottomBar(
         headerLabel = "Transacciones",
         currentRoute = currentRoute,
         onBottomBarClick = { onBottomBarClick(it) }
     ) {
         if (transactions.isNotEmpty()) {
-            Text("Listado de transacciones", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
+            Text(
+                "Listado de transacciones",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
             SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                 SegmentedButton(
-                    selected = false,
-                    onClick = {  },
+                    selected = viewMode == EARNS,
+                    onClick = { viewModel.updateTransactionViewMode(EARNS) },
                     shape = SegmentedButtonDefaults.itemShape(0, 3),
-                    label = { Text("Ingresos") }
+                    label = { Text(EARNS.value) }
                 )
                 SegmentedButton(
-                    selected = false,
-                    onClick = {  },
+                    selected = viewMode == EXPENSES,
+                    onClick = { viewModel.updateTransactionViewMode(EXPENSES) },
                     shape = SegmentedButtonDefaults.itemShape(1, 3),
-                    label = { Text("Gastos") }
+                    label = { Text(EXPENSES.value) }
                 )
                 SegmentedButton(
-                    selected = true,
-                    onClick = { },
+                    selected = viewMode == ALL,
+                    onClick = { viewModel.updateTransactionViewMode(ALL) },
                     shape = SegmentedButtonDefaults.itemShape(2, 3),
-                    label = { Text("Ver todo") }
+                    label = { Text(ALL.value) }
                 )
 
             }
@@ -84,7 +92,7 @@ fun TransactionsScreen(
 @Composable
 private fun TransactionCard(data: Transaction) {
 
-    val color = if (data.isEarn) DarkAccentLime else MaterialTheme.colorScheme.errorContainer
+    val color = if (data.isEarn) AccentColor else ErrorContainer
 
     Card(
         Modifier.fillMaxWidth(),
@@ -98,8 +106,20 @@ private fun TransactionCard(data: Transaction) {
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(data.description, overflow = TextOverflow.Ellipsis)
-            Text(data.amount.toPrice())
+            Text(
+                data.description,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                data.amount.toPrice(),
+                maxLines = 1,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 

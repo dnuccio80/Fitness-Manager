@@ -32,7 +32,7 @@ import com.danucdev.fitnessmanager.ui.screens.clients.addclients.AddClientScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.ClientDetailsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.expenses.ExpensesScreen
 import com.danucdev.fitnessmanager.ui.screens.tests.TestingClientsScreen
-import com.danucdev.fitnessmanager.ui.screens.transactions.PaymentsScreen
+import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
 import dagger.hilt.android.AndroidEntryPoint

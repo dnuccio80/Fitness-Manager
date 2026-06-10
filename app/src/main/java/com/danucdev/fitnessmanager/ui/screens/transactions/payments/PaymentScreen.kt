@@ -1,12 +1,12 @@
-package com.danucdev.fitnessmanager.ui.screens.transactions
+package com.danucdev.fitnessmanager.ui.screens.transactions.payments
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -28,11 +28,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -40,23 +40,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.danucdev.fitnessmanager.ui.core.BackIconButton
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.danucdev.fitnessmanager.domain.models.Client
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
-import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
+import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.*
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 
+enum class PaymentMethod(val method: String) {
+    CASH("Efectivo"), TRANSFER("Transferencia")
+}
+
 @Composable
-fun PaymentsScreen(onBack: () -> Unit) {
+fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () -> Unit) {
 
     var openClientMenu by rememberSaveable { mutableStateOf(false) }
-    var clientSelected by rememberSaveable { mutableStateOf("") }
     var clientQuery by rememberSaveable { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val clients by viewModel.clientsList.collectAsStateWithLifecycle()
+    val paymentData by viewModel.paymentData.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     ScreenContainer("Agregar nuevo cobro", onBack = { onBack() }) {
         Column(
@@ -77,8 +93,9 @@ fun PaymentsScreen(onBack: () -> Unit) {
         }
         Spacer(Modifier.size(16.dp))
         ClientSelector(
-            clientSelected = clientSelected,
+            clientSelected = paymentData.clientName,
             openClientMenu = openClientMenu,
+            clients,
             clientQuery = clientQuery,
         ) { action, value ->
             when (action) {
@@ -89,7 +106,7 @@ fun PaymentsScreen(onBack: () -> Unit) {
 
                 ClientSelectorActions.CLIENT_SELECTED -> {
                     openClientMenu = false
-                    clientSelected = value.orEmpty()
+                    viewModel.updateClientName(value.orEmpty())
                     clientQuery = ""
                 }
 
@@ -97,7 +114,10 @@ fun PaymentsScreen(onBack: () -> Unit) {
                 ClientSelectorActions.MODIFY_QUERY_CLIENT -> clientQuery = value.orEmpty()
             }
         }
-        PaymentSelector()
+        PaymentSelector(
+            paymentSelected = paymentData.paymentMethod,
+            onPaymentSelected = { viewModel.updatePaymentMethod(it) }
+        )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Card(
                 modifier = Modifier
@@ -153,7 +173,7 @@ fun PaymentsScreen(onBack: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 MaxWidthButtonLime("Agregar Pago") {
-                    // TODO
+                    viewModel.addPayment()
                 }
                 Spacer(modifier = Modifier.size(16.dp))
             }
@@ -163,44 +183,68 @@ fun PaymentsScreen(onBack: () -> Unit) {
 
 
 @Composable
-private fun PaymentSelector() {
+private fun PaymentSelector(
+    paymentSelected: PaymentMethod,
+    onPaymentSelected: (PaymentMethod) -> Unit,
+) {
 
-    var paymentMethod by rememberSaveable { mutableStateOf("Efectivo") }
+    val paymentMethods = listOf(
+        CASH,
+        TRANSFER
+    )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("Método de pago", style = MaterialTheme.typography.titleMedium)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable {
-                paymentMethod = "Efectivo"
-            }
-        ) {
-            RadioButton(
-                selected = paymentMethod == "Efectivo",
-                onClick = { },
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = DarkAccentLime,
-                    unselectedColor = MaterialTheme.colorScheme.onPrimary
+        paymentMethods.forEach { method ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    onPaymentSelected(method)
+                }
+            ) {
+                RadioButton(
+                    selected = paymentSelected == method,
+                    onClick = { onPaymentSelected(method) },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = DarkAccentLime,
+                        unselectedColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
-            )
-            Text("Efectivo", style = MaterialTheme.typography.labelLarge)
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable {
-                paymentMethod = "Transferencia"
+                Text(method.method, style = MaterialTheme.typography.labelLarge)
             }
-        ) {
-            RadioButton(
-                selected = paymentMethod == "Transferencia",
-                onClick = { },
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = DarkAccentLime,
-                    unselectedColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-            Text("Transferencia", style = MaterialTheme.typography.labelLarge)
         }
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier.clickable {
+//                paymentMethod = "Efectivo"
+//            }
+//        ) {
+//            RadioButton(
+//                selected = paymentMethod == "Efectivo",
+//                onClick = { paymentMethod = "Efectivo" },
+//                colors = RadioButtonDefaults.colors(
+//                    selectedColor = DarkAccentLime,
+//                    unselectedColor = MaterialTheme.colorScheme.onPrimary
+//                )
+//            )
+//            Text("Efectivo", style = MaterialTheme.typography.labelLarge)
+//        }
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier.clickable {
+//                paymentMethod = "Transferencia"
+//            }
+//        ) {
+//            RadioButton(
+//                selected = paymentMethod == "Transferencia",
+//                onClick = { paymentMethod = "Transferencia" },
+//                colors = RadioButtonDefaults.colors(
+//                    selectedColor = DarkAccentLime,
+//                    unselectedColor = MaterialTheme.colorScheme.onPrimary
+//                )
+//            )
+//            Text("Transferencia", style = MaterialTheme.typography.labelLarge)
+//        }
     }
 }
 
@@ -208,21 +252,10 @@ private fun PaymentSelector() {
 private fun ClientSelector(
     clientSelected: String,
     openClientMenu: Boolean,
+    clients: List<Client>,
     clientQuery: String,
     onActionDone: (ClientSelectorActions, String?) -> Unit,
 ) {
-
-    val nameListTest = listOf(
-        "Damian Nuccio",
-        "Leysa Asnal",
-        "Elias Basualdo",
-        "Emmanuel Ramos",
-        "Emmanuel Ramos",
-        "Emmanuel Ramos",
-        "Emmanuel Ramos",
-        "Emmanuel Ramos",
-        "Emmanuel Ramos",
-    )
 
     Column {
         TextField(
@@ -256,36 +289,43 @@ private fun ClientSelector(
                 .fillMaxWidth()
                 .heightIn(max = 240.dp)
         ) {
-            TextField(
-                value = clientQuery,
-                placeholder = { Text("Buscar por nombre..") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                onValueChange = {
-                    onActionDone(ClientSelectorActions.MODIFY_QUERY_CLIENT, it)
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
-                maxLines = 1,
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (clientQuery.isNotBlank()) Icon(
-                        Icons.Default.Clear,
-                        contentDescription = "borrar nombre",
-                        modifier = Modifier.clickable {
-                            onActionDone(
-                                ClientSelectorActions.MODIFY_QUERY_CLIENT, ""
-                            )
-                        })
-                }
-            )
-            nameListTest.forEach { clientName ->
-                DropdownMenuItem(
-                    text = { Text(clientName) },
-                    onClick = {
-                        onActionDone(ClientSelectorActions.CLIENT_SELECTED, clientName)
+            if (clients.isNotEmpty()) {
+                TextField(
+                    value = clientQuery,
+                    placeholder = { Text("Buscar por nombre..") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    onValueChange = {
+                        onActionDone(ClientSelectorActions.MODIFY_QUERY_CLIENT, it)
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+                    maxLines = 1,
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    trailingIcon = {
+                        if (clientQuery.isNotBlank()) Icon(
+                            Icons.Default.Clear,
+                            contentDescription = "borrar nombre",
+                            modifier = Modifier.clickable {
+                                onActionDone(
+                                    ClientSelectorActions.MODIFY_QUERY_CLIENT, ""
+                                )
+                            })
                     }
+                )
+                clients.forEach { client ->
+                    DropdownMenuItem(
+                        text = { Text(client.name) },
+                        onClick = {
+                            onActionDone(ClientSelectorActions.CLIENT_SELECTED, client.name)
+                        }
+                    )
+                }
+            } else {
+                DropdownMenuItem(
+                    text = { Text("No hay clientes registrados") },
+                    onClick = { }
                 )
             }
         }
