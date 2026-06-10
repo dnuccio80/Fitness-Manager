@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                                 navigateToAddInvestment = { backStack.navigateTo(Investment) },
                                 navigateToConfig = { backStack.navigateTo(Config) },
                                 navigateToBottomBarAction = { target -> backStack.backTo(target) },
-                                currentRoute
+                                currentRoute = currentRoute
                             )
                         }
 //                        entry<Clients> { ClientsScreen(currentRoute) { target -> backStack.backTo(target) } }

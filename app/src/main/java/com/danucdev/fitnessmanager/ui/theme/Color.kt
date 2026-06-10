@@ -22,5 +22,6 @@ val DarkIconsAccent = Color(0xFFc2ff27)
 val DarkTextPrimary = DarkAccentWhite
 val DarkTextSecondary = Color(0xFF818181)
 val AccentColor = Color(0xFF0B4457)
+val AccentColor2 = Color(0xFF1F4912)
 val ErrorContainer = Color(0xFF570303)
 

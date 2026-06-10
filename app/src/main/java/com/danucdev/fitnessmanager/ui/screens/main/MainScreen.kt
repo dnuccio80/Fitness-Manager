@@ -1,5 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,24 +24,39 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.domain.models.Transaction
 import com.danucdev.fitnessmanager.ui.core.MainHeader
+import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
 import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.*
+import com.danucdev.fitnessmanager.ui.theme.AccentColor
+import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
+import com.danucdev.fitnessmanager.ui.theme.DarkIcons
+import com.danucdev.fitnessmanager.ui.theme.DarkTextPrimary
+import com.danucdev.fitnessmanager.ui.theme.ErrorContainer
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
 fun MainScreen(
+    viewModel: MainViewModel = hiltViewModel(),
     navigateToPaymentReceived: () -> Unit,
     navigateToAddClient: () -> Unit,
     navigateToAddInvestment: () -> Unit,
@@ -48,6 +64,9 @@ fun MainScreen(
     navigateToBottomBarAction: (NavKey) -> Unit,
     currentRoute: NavKey,
 ) {
+
+    val lastTransactions by viewModel.lastTransactions.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -77,7 +96,7 @@ fun MainScreen(
                         }
                     }
                 }
-                LastTransactionsSection()
+                LastTransactionsSection(lastTransactions)
             }
         }
     }
@@ -110,7 +129,7 @@ fun BottomBar(currentRoute: NavKey, onClick: (NavKey) -> Unit) {
 }
 
 @Composable
-fun LastTransactionsSection() {
+fun LastTransactionsSection(lastTransactions: List<Transaction>) {
     Card(
         Modifier
             .fillMaxWidth(),
@@ -137,26 +156,9 @@ fun LastTransactionsSection() {
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                LastTransactionRowItem(
-                    "Pago cuota de Damian Nuccio",
-                    painterResource(R.drawable.ic_money),
-                    120000
-                )
-                LastTransactionRowItem(
-                    "Pago cuota de Damian Nuccio",
-                    painterResource(R.drawable.ic_money),
-                    120000
-                )
-                LastTransactionRowItem(
-                    "Pago cuota de Damian Nuccio",
-                    painterResource(R.drawable.ic_money),
-                    120000
-                )
-                LastTransactionRowItem(
-                    "Pago cuota de Damian Nuccio",
-                    painterResource(R.drawable.ic_money),
-                    120000
-                )
+                lastTransactions.forEach { transaction ->
+                    LastTransactionRowItem(transaction)
+                }
 
             }
         }
@@ -164,7 +166,10 @@ fun LastTransactionsSection() {
 }
 
 @Composable
-fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
+fun LastTransactionRowItem(transaction: Transaction) {
+
+    val icon = if (transaction.isEarn) R.drawable.ic_money else R.drawable.ic_bag
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -172,6 +177,7 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
+
         Row(
             Modifier
                 .fillMaxWidth()
@@ -182,21 +188,27 @@ fun LastTransactionRowItem(label: String, icon: Painter, amount: Int) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-
-                ) {
+                modifier = Modifier.weight(1f)
+            ) {
                 Card(
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(containerColor = DarkAccentLime)
                 ) {
-                    Icon(icon, contentDescription = null, tint = MainDark)
+                    Icon(painterResource(icon), contentDescription = null, tint = MainDark)
                 }
-                Text(label, style = MaterialTheme.typography.labelLarge)
+                Text(
+                    transaction.description,
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             Text(
-                "$$amount",
+                transaction.amount.toPrice(),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = DarkAccentLime
+                color = DarkAccentLime,
+                maxLines = 1,
             )
         }
     }

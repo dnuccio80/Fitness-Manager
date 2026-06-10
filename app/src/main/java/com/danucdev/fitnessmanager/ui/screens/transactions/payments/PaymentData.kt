@@ -1,6 +1,5 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.payments
 
-import com.danucdev.fitnessmanager.data.dao.TransactionDao_Impl
 import com.danucdev.fitnessmanager.domain.models.Transaction
 
 data class PaymentData(
@@ -13,7 +12,7 @@ data class PaymentData(
         return Transaction(
             isEarn = true,
             amount = amount,
-            description = "Pago en ${paymentMethod.method} de $clientName"
+            description = "${paymentMethod.method} de $clientName"
         )
     }
 }

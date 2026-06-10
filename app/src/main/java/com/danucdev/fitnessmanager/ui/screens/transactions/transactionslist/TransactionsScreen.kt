@@ -1,6 +1,8 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,6 +32,8 @@ import com.danucdev.fitnessmanager.ui.core.ScreenContainerWithBottomBar
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.*
 import com.danucdev.fitnessmanager.ui.theme.AccentColor
+import com.danucdev.fitnessmanager.ui.theme.AccentColor2
+import com.danucdev.fitnessmanager.ui.theme.CardDark
 import com.danucdev.fitnessmanager.ui.theme.ErrorContainer
 
 @Composable
@@ -92,35 +97,50 @@ fun TransactionsScreen(
 @Composable
 private fun TransactionCard(data: Transaction) {
 
-    val color = if (data.isEarn) AccentColor else ErrorContainer
+    val color = if (data.isEarn) AccentColor2 else ErrorContainer
 
     Card(
         Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = color),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Row(
-            Modifier
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            CardDark,
+                            CardDark,
+                            color,
+                        )
+                    )
+                )
                 .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                data.description,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                data.amount.toPrice(),
-                maxLines = 1,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    data.description,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    data.amount.toPrice(),
+                    maxLines = 1,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
+
     }
 
 }
