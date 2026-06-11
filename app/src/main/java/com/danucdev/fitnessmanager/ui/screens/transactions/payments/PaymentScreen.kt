@@ -1,16 +1,20 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.payments
 
 import android.widget.Toast
+import androidx.compose.animation.animateBounds
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,9 +32,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +46,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -73,6 +81,9 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
 
     ScreenContainer("Agregar nuevo cobro", onBack = { onBack() }) {
         Column(
@@ -118,40 +129,8 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
             paymentSelected = paymentData.paymentMethod,
             onPaymentSelected = { viewModel.updatePaymentMethod(it) }
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
-            ) {
-                Row(
-                    Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Cuota mensual", style = MaterialTheme.typography.labelLarge)
-                    Text(
-                        "$40.000",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = DarkAccentLime
-                    )
-                }
-            }
-            Spacer(Modifier.size(8.dp))
-            Icon(
-                Icons.Filled.Delete,
-                contentDescription = "Eliminar item",
-                Modifier
-                    .weight(.1f)
-                    .clickable {
-                        // DELETE ITEM
-                    })
+        LazyColumn {
+            item { PaidItem(modifier = Modifier.animateItem()) }
         }
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Column(
@@ -181,9 +160,70 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
     }
 }
 
+@Composable
+private fun PaidItem(modifier: Modifier) {
+
+    val dismissState = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.StartToEnd) {
+            dismissState.snapTo(SwipeToDismissBoxValue.Settled)
+        }
+    }
+
+    SwipeToDismissBox(
+        modifier = modifier,
+        state = dismissState,
+        enableDismissFromEndToStart = false,
+        backgroundContent = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.errorContainer),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Icon(
+                    Icons.Filled.Delete,
+                    contentDescription = "eliminar item",
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+        }
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
+            ) {
+                Row(
+                    Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Cuota mensual", style = MaterialTheme.typography.labelLarge)
+                    Text(
+                        "$40.000",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = DarkAccentLime
+                    )
+                }
+            }
+        }
+    }
+
+}
+
 
 @Composable
-private fun PaymentSelector(
+fun PaymentSelector(
     paymentSelected: PaymentMethod,
     onPaymentSelected: (PaymentMethod) -> Unit,
 ) {
@@ -213,38 +253,6 @@ private fun PaymentSelector(
                 Text(method.method, style = MaterialTheme.typography.labelLarge)
             }
         }
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.clickable {
-//                paymentMethod = "Efectivo"
-//            }
-//        ) {
-//            RadioButton(
-//                selected = paymentMethod == "Efectivo",
-//                onClick = { paymentMethod = "Efectivo" },
-//                colors = RadioButtonDefaults.colors(
-//                    selectedColor = DarkAccentLime,
-//                    unselectedColor = MaterialTheme.colorScheme.onPrimary
-//                )
-//            )
-//            Text("Efectivo", style = MaterialTheme.typography.labelLarge)
-//        }
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.clickable {
-//                paymentMethod = "Transferencia"
-//            }
-//        ) {
-//            RadioButton(
-//                selected = paymentMethod == "Transferencia",
-//                onClick = { paymentMethod = "Transferencia" },
-//                colors = RadioButtonDefaults.colors(
-//                    selectedColor = DarkAccentLime,
-//                    unselectedColor = MaterialTheme.colorScheme.onPrimary
-//                )
-//            )
-//            Text("Transferencia", style = MaterialTheme.typography.labelLarge)
-//        }
     }
 }
 

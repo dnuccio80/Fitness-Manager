@@ -3,6 +3,7 @@ package com.danucdev.fitnessmanager.ui.screens.clients.addclients
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.danucdev.fitnessmanager.domain.usecases.clients.AddClientUseCase
+import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,6 +47,12 @@ class AddClientsViewModel @Inject constructor(
     fun toggleClientAlreadyPay() {
         _clientData.update {current ->
             current.copy(alreadyPay = !current.alreadyPay)
+        }
+    }
+
+    fun updatePaymentMethod(newValue: PaymentMethod) {
+        _clientData.update {current ->
+            current.copy(paymentMethod = newValue)
         }
     }
 

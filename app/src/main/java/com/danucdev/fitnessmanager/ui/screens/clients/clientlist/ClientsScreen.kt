@@ -1,5 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.clients.clientlist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,23 +14,33 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.danucdev.fitnessmanager.R
 import com.danucdev.fitnessmanager.domain.models.Client
 import com.danucdev.fitnessmanager.ui.core.NormalHeader
 import com.danucdev.fitnessmanager.ui.screens.main.BottomBar
@@ -97,10 +108,18 @@ fun ClientsScreen(
                             )
                         }
                     }
-                    items(clientData.value.clientList) {client ->
-                        ClientRowItem(client)
+                    if(clientData.value.clientList.isEmpty()) {
+                        item { Text(
+                            "No hay clientes que hayan pagado este mes",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(4.dp)
+                        ) }
+                    } else {
+                        items(clientData.value.clientList) {client ->
+                            ClientRowItem(client)
+                        }
                     }
-
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             Text(
@@ -185,6 +204,17 @@ private fun ClientRowItem(client: Client) {
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium
             )
+            Spacer(Modifier.weight(1f))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Icon(painterResource(R.drawable.ic_timer), contentDescription = null, tint = MaterialTheme.colorScheme.surfaceVariant)
+                Text(
+                    "29 días",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(4.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }
         }
     }
 }

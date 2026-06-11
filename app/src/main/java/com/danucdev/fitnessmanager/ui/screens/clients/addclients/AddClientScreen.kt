@@ -35,6 +35,8 @@ import com.danucdev.fitnessmanager.ui.core.ErrorText
 import com.danucdev.fitnessmanager.ui.core.TextFieldForNamesItem
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
+import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod
+import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentSelector
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.MainDark
@@ -95,6 +97,12 @@ fun AddClientScreen(viewModel: AddClientsViewModel = hiltViewModel(), onBack: ()
                 numberOnly = true
             ) { viewModel.updateClientPhoneNumber(it) }
             CheckLabelItem("Ya pagó la cuota", clientData.alreadyPay) { viewModel.toggleClientAlreadyPay() }
+            AnimatedVisibility(clientData.alreadyPay) {
+                PaymentSelector(
+                    paymentSelected = clientData.paymentMethod,
+                    onPaymentSelected = { viewModel.updatePaymentMethod(it) }
+                )
+            }
             AnimatedVisibility(!clientData.allData) {
                 ErrorText("Faltan rellenar datos!")
             }
