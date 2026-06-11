@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -124,9 +125,11 @@ fun BottomBar(currentRoute: NavKey, onClick: (NavKey) -> Unit) {
 
 @Composable
 fun LastTransactionsSection(lastTransactions: List<Transaction>) {
+
     Card(
         Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .heightIn(min = 230.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(2.dp)
@@ -150,6 +153,14 @@ fun LastTransactionsSection(lastTransactions: List<Transaction>) {
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (lastTransactions.isEmpty()) {
+                    Text(
+                        "No hay transacciones para mostrar",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
                 lastTransactions.forEach { transaction ->
                     LastTransactionRowItem(transaction)
                 }
@@ -235,8 +246,14 @@ private fun DashboardCardItem(resume: MainData) {
                     thickness = 1.dp, color = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            DetailsRowWithIcon("Ingresos del mes: ${resume.totalEarns.toPrice()}", painterResource(R.drawable.ic_money))
-            DetailsRowWithIcon("Gastos del mes: ${resume.totalExpenses.toPrice()}", painterResource(R.drawable.ic_bag))
+            DetailsRowWithIcon(
+                "Ingresos del mes: ${resume.totalEarns.toPrice()}",
+                painterResource(R.drawable.ic_money)
+            )
+            DetailsRowWithIcon(
+                "Gastos del mes: ${resume.totalExpenses.toPrice()}",
+                painterResource(R.drawable.ic_bag)
+            )
             DetailsRowWithIcon("Usuarios activos: 140", painterResource(R.drawable.ic_person))
             DetailsRowWithIcon("Cuotas pendientes: 80", painterResource(R.drawable.ic_task))
             DetailsRowWithIcon(

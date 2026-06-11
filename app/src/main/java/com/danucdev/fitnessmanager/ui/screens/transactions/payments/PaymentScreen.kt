@@ -316,7 +316,7 @@ private fun ClientSelector(
                 )
                 clients.forEach { client ->
                     DropdownMenuItem(
-                        text = { Text(client.name) },
+                        text = { Text("${client.name} ${client.lastName}") },
                         onClick = {
                             onActionDone(ClientSelectorActions.CLIENT_SELECTED, client.name)
                         }
