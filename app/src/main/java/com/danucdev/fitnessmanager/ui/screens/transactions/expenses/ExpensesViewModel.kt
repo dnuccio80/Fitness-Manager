@@ -32,7 +32,7 @@ class ExpensesViewModel @Inject constructor(
     }
 
     fun updateAmount(newValue: String) {
-        val inLong = newValue.toLong()
+        val inLong = if(newValue.isNotBlank()) newValue.toLong() else 0
         _expenseData.update { current ->
             current.copy(amount = inLong)
         }

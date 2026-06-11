@@ -30,8 +30,9 @@ import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.domain.models.Transaction
 import com.danucdev.fitnessmanager.ui.core.ScreenContainerWithBottomBar
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
-import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.*
-import com.danucdev.fitnessmanager.ui.theme.AccentColor
+import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.ALL
+import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.EARNS
+import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.EXPENSES
 import com.danucdev.fitnessmanager.ui.theme.AccentColor2
 import com.danucdev.fitnessmanager.ui.theme.CardDark
 import com.danucdev.fitnessmanager.ui.theme.ErrorContainer
@@ -51,37 +52,35 @@ fun TransactionsScreen(
         currentRoute = currentRoute,
         onBottomBarClick = { onBottomBarClick(it) }
     ) {
-        if (transactions.isNotEmpty()) {
-            Text(
-                "Listado de transacciones",
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
+        Text(
+            "Listado de transacciones",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge
+        )
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            SegmentedButton(
+                selected = viewMode == EARNS,
+                onClick = { viewModel.updateTransactionViewMode(EARNS) },
+                shape = SegmentedButtonDefaults.itemShape(0, 3),
+                label = { Text(EARNS.value) }
             )
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                SegmentedButton(
-                    selected = viewMode == EARNS,
-                    onClick = { viewModel.updateTransactionViewMode(EARNS) },
-                    shape = SegmentedButtonDefaults.itemShape(0, 3),
-                    label = { Text(EARNS.value) }
-                )
-                SegmentedButton(
-                    selected = viewMode == EXPENSES,
-                    onClick = { viewModel.updateTransactionViewMode(EXPENSES) },
-                    shape = SegmentedButtonDefaults.itemShape(1, 3),
-                    label = { Text(EXPENSES.value) }
-                )
-                SegmentedButton(
-                    selected = viewMode == ALL,
-                    onClick = { viewModel.updateTransactionViewMode(ALL) },
-                    shape = SegmentedButtonDefaults.itemShape(2, 3),
-                    label = { Text(ALL.value) }
-                )
+            SegmentedButton(
+                selected = viewMode == EXPENSES,
+                onClick = { viewModel.updateTransactionViewMode(EXPENSES) },
+                shape = SegmentedButtonDefaults.itemShape(1, 3),
+                label = { Text(EXPENSES.value) }
+            )
+            SegmentedButton(
+                selected = viewMode == ALL,
+                onClick = { viewModel.updateTransactionViewMode(ALL) },
+                shape = SegmentedButtonDefaults.itemShape(2, 3),
+                label = { Text(ALL.value) }
+            )
 
-            }
-
-
+        }
+        if (transactions.isNotEmpty()) {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(transactions) { transaction ->
                     TransactionCard(transaction)

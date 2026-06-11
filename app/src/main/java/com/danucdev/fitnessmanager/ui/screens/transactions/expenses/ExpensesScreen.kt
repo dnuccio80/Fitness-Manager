@@ -1,5 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.expenses
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -17,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,6 +36,14 @@ import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel(), onBack: () -> Unit) {
 
     val expenseData by viewModel.expenseData.collectAsStateWithLifecycle()
+    val amount = if(expenseData.amount > 0) expenseData.amount.toString() else ""
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     ScreenContainer("Agregar nuevo gasto", onBack = { onBack() }) {
         Column(
@@ -58,7 +69,7 @@ fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel(), onBack: () ->
             onValueChange = { viewModel.updateDetails(it) }
         )
         TextFieldForNamesItem(
-            value = expenseData.amount.toString(),
+            value = amount,
             placeholder = "Monto..",
             numberOnly = true,
             onValueChange = { viewModel.updateAmount(it) }
