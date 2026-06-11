@@ -32,8 +32,9 @@ class ExpensesViewModel @Inject constructor(
     }
 
     fun updateAmount(newValue: String) {
+        val inLong = newValue.toLong()
         _expenseData.update { current ->
-            current.copy(amount = newValue)
+            current.copy(amount = inLong)
         }
     }
 
@@ -53,12 +54,12 @@ class ExpensesViewModel @Inject constructor(
 
     private fun cleanData() {
         _expenseData.update { current ->
-            current.copy(details = "", amount = "", isAllData = true)
+            current.copy(details = "", amount = 0L, isAllData = true)
         }
     }
 
     private fun isAllData(): Boolean {
-        return _expenseData.value.details.isNotBlank() && _expenseData.value.amount.isNotBlank()
+        return _expenseData.value.details.isNotBlank() && _expenseData.value.amount > 0
     }
 
 

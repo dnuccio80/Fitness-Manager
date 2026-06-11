@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.toString
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,7 +28,7 @@ fun TestingClientsScreen(viewModel: TestingViewModel = hiltViewModel(), onBack:(
                 Card {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(client.name)
-                        Text(client.phone)
+                        Text(client.phone.toString())
                     }
                 }
             }

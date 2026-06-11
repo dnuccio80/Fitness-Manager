@@ -6,7 +6,7 @@ data class PaymentData(
     val clientName:String = "",
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
     val description:String = "",
-    val amount:String = "40000"
+    val amount:Long = 40000
 ) {
     fun toTransaction(): Transaction {
         return Transaction(

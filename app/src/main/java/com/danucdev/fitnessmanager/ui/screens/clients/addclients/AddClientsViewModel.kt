@@ -37,8 +37,9 @@ class AddClientsViewModel @Inject constructor(
     }
 
     fun updateClientPhoneNumber(newValue: String) {
+        val inLong = if(newValue.isBlank()) 0 else newValue.toLong()
         _clientData.update {current ->
-            current.copy(phoneNUmber =  newValue)
+            current.copy(phoneNumber =  inLong)
         }
     }
 
@@ -63,12 +64,12 @@ class AddClientsViewModel @Inject constructor(
     }
 
     private fun isAllData(): Boolean {
-        return _clientData.value.name.isNotBlank() && _clientData.value.lastName.isNotBlank() && _clientData.value.phoneNUmber.isNotBlank()
+        return _clientData.value.name.isNotBlank() && _clientData.value.lastName.isNotBlank() && _clientData.value.phoneNumber > 0L
     }
 
     private fun cleanData() {
         _clientData.update { current ->
-            current.copy(name = "", lastName = "", phoneNUmber = "", alreadyPay = true, allData = true)
+            current.copy(name = "", lastName = "", phoneNumber = 0L, alreadyPay = true, allData = true)
         }
     }
 

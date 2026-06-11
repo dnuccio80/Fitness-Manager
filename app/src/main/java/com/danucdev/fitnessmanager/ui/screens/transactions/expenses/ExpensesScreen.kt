@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +58,7 @@ fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel(), onBack: () ->
             onValueChange = { viewModel.updateDetails(it) }
         )
         TextFieldForNamesItem(
-            value = expenseData.amount,
+            value = expenseData.amount.toString(),
             placeholder = "Monto..",
             numberOnly = true,
             onValueChange = { viewModel.updateAmount(it) }

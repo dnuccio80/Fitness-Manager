@@ -9,12 +9,14 @@ data class ClientEntity(
     @PrimaryKey(autoGenerate = true)
     val clientId:Int,
     val name:String,
-    val phone:String
+    val lastName:String,
+    val phone: Long
 ) {
     fun toDomain(): Client {
         return Client(
             clientId = clientId,
             name = name,
+            lastName = lastName,
             phone = phone
         )
     }

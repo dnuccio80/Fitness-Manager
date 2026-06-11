@@ -5,14 +5,15 @@ import com.danucdev.fitnessmanager.domain.models.Client
 data class ClientData(
     val name:String = "",
     val lastName:String = "",
-    val phoneNUmber:String = "",
+    val phoneNumber:Long = 0L,
     val alreadyPay: Boolean = true,
     val allData: Boolean = true
 ) {
     fun toClient(): Client {
         return Client(
-            name = "$name $lastName",
-            phone = phoneNUmber
+            name = name,
+            lastName = lastName,
+            phone = phoneNumber
         )
     }
 }

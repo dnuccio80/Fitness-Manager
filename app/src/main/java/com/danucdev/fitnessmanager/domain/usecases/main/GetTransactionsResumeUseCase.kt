@@ -15,12 +15,12 @@ class GetTransactionsResumeUseCase @Inject constructor(private val transactionRe
         return transactionRepository.getAllTransactions()
             .map { transactions ->
 
-                var earns = 0
-                var expenses = 0
+                var earns = 0L
+                var expenses = 0L
 
                 transactions.forEach { transaction ->
 
-                    val amount = transaction.amount.toIntOrNull() ?: 0
+                    val amount = transaction.amount.toLong()
 
                     if (transaction.isEarn) {
                         earns += amount
@@ -31,8 +31,8 @@ class GetTransactionsResumeUseCase @Inject constructor(private val transactionRe
                 }
 
                 MainData(
-                    totalEarns = earns.toString(),
-                    totalExpenses = expenses.toString()
+                    totalEarns = earns,
+                    totalExpenses = expenses
                 )
 
             }

@@ -67,14 +67,14 @@ class PaymentsViewModel @Inject constructor(
                 clientName = "",
                 paymentMethod = PaymentMethod.CASH,
                 description = "",
-                amount = "40000"
+                amount = 40000
             )
         }
     }
 
     private fun isAllData(): Boolean {
         return _paymentData.value.clientName.isNotBlank() &&
-                _paymentData.value.amount.isNotBlank()
+                _paymentData.value.amount > 0
     }
 
 

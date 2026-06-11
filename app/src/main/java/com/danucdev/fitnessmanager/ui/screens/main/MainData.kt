@@ -1,6 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.main
 
 data class MainData(
-    val totalEarns:String = "",
-    val totalExpenses:String = "",
+    val totalEarns: Long = 0L,
+    val totalExpenses:Long = 0L,
 )

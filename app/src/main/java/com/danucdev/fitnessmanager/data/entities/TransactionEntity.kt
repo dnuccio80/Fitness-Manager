@@ -9,7 +9,7 @@ data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     val isEarn: Boolean,
-    val amount:String,
+    val amount: Long,
     val description:String,
 ) {
     fun toDomain(): Transaction {
