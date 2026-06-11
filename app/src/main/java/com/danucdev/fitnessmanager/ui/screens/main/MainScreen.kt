@@ -1,6 +1,5 @@
 package com.danucdev.fitnessmanager.ui.screens.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,9 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,14 +40,11 @@ import com.danucdev.fitnessmanager.domain.models.Transaction
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
-import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.*
-import com.danucdev.fitnessmanager.ui.theme.AccentColor
-import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
+import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_CLIENT
+import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_INVESTMENT
+import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_PAYMENT
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
-import com.danucdev.fitnessmanager.ui.theme.DarkIcons
-import com.danucdev.fitnessmanager.ui.theme.DarkTextPrimary
-import com.danucdev.fitnessmanager.ui.theme.ErrorContainer
 import com.danucdev.fitnessmanager.ui.theme.MainDark
 
 @Composable
@@ -66,6 +59,7 @@ fun MainScreen(
 ) {
 
     val lastTransactions by viewModel.lastTransactions.collectAsStateWithLifecycle()
+    val resume by viewModel.resume.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -80,7 +74,7 @@ fun MainScreen(
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 MainHeader { navigateToConfig() }
-                DashboardCardItem()
+                DashboardCardItem(resume)
                 TransactionSection { action ->
                     when (action) {
                         NEW_PAYMENT -> {
@@ -216,7 +210,7 @@ fun LastTransactionRowItem(transaction: Transaction) {
 
 
 @Composable
-private fun DashboardCardItem() {
+private fun DashboardCardItem(resume: MainData) {
     Card(
         Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -241,8 +235,8 @@ private fun DashboardCardItem() {
                     thickness = 1.dp, color = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            DetailsRowWithIcon("Ingresos del mes: $1.400.000", painterResource(R.drawable.ic_money))
-            DetailsRowWithIcon("Gastos del mes: $400.000", painterResource(R.drawable.ic_bag))
+            DetailsRowWithIcon("Ingresos del mes: ${resume.totalEarns.toPrice()}", painterResource(R.drawable.ic_money))
+            DetailsRowWithIcon("Gastos del mes: ${resume.totalExpenses.toPrice()}", painterResource(R.drawable.ic_bag))
             DetailsRowWithIcon("Usuarios activos: 140", painterResource(R.drawable.ic_person))
             DetailsRowWithIcon("Cuotas pendientes: 80", painterResource(R.drawable.ic_task))
             DetailsRowWithIcon(
