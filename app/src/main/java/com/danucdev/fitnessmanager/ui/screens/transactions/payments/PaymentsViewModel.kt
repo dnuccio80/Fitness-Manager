@@ -67,7 +67,7 @@ class PaymentsViewModel @Inject constructor(
                 clientName = "",
                 paymentMethod = PaymentMethod.CASH,
                 description = "",
-                amount = ""
+                amount = "40000"
             )
         }
     }
