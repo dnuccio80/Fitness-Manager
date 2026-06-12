@@ -5,12 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.danucdev.fitnessmanager.domain.usecases.main.GetTransactionsResumeUseCase
 import com.danucdev.fitnessmanager.domain.usecases.transactions.GetLastTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

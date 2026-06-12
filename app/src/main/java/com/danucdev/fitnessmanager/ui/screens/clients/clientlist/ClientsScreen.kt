@@ -1,6 +1,5 @@
 package com.danucdev.fitnessmanager.ui.screens.clients.clientlist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -25,15 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -92,7 +84,10 @@ fun ClientsScreen(
 
                 }
 
-                LazyColumn(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyColumn(
+                    Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             val clientsPaid = clientData.value.activeClients
@@ -108,16 +103,18 @@ fun ClientsScreen(
                             )
                         }
                     }
-                    if(clientData.value.clientList.isEmpty()) {
-                        item { Text(
-                            "No hay clientes que hayan pagado este mes",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(4.dp)
-                        ) }
+                    if (clientData.value.clientList.isEmpty()) {
+                        item {
+                            Text(
+                                "No hay clientes que hayan pagado este mes",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
                     } else {
-                        items(clientData.value.clientList) {client ->
-                            ClientRowItem(client)
+                        items(clientData.value.clientList) { client ->
+                            ActiveClientRow(client)
                         }
                     }
                     item {
@@ -135,11 +132,13 @@ fun ClientsScreen(
                         }
                     }
                     items(10) {
-                        ClientRowItem(Client(
-                            name = "da",
-                            phone = 2321,
-                            lastName = "das"
-                        ))
+                        InactiveClient(
+                            Client(
+                                name = "Mateo",
+                                lastName = "Fernandez",
+                                phone = 3571596202
+                            )
+                        )
                     }
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -156,11 +155,13 @@ fun ClientsScreen(
                         }
                     }
                     items(10) {
-                        ClientRowItem(Client(
-                            name = "da",
-                            phone = 213,
-                            lastName = "dasd"
-                        ))
+                        InactiveClient(
+                            Client(
+                                name = "Mateo",
+                                phone = 2136456,
+                                lastName = "Fernandez"
+                            )
+                        )
                     }
                 }
             }
@@ -171,7 +172,7 @@ fun ClientsScreen(
 }
 
 @Composable
-private fun ClientRowItem(client: Client) {
+private fun ActiveClientRow(client: Client) {
     Card(
         Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -205,10 +206,17 @@ private fun ClientRowItem(client: Client) {
                 fontWeight = FontWeight.Medium
             )
             Spacer(Modifier.weight(1f))
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Icon(painterResource(R.drawable.ic_timer), contentDescription = null, tint = MaterialTheme.colorScheme.surfaceVariant)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_timer),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceVariant
+                )
                 Text(
-                    "29 días",
+                    "31 días",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(4.dp),
@@ -218,3 +226,42 @@ private fun ClientRowItem(client: Client) {
         }
     }
 }
+
+@Composable
+private fun InactiveClient(client: Client) {
+    Card(
+        Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Card(
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(
+                    containerColor = DarkAccentLime,
+                    contentColor = MainDark
+                )
+            ) {
+                Text(
+                    "${client.name.first()}${client.lastName.first()}",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
+            Text(
+                "${client.name} ${client.lastName}",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Medium
+            )
+
+        }
+    }
+    }

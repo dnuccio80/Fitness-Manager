@@ -142,7 +142,7 @@ fun LastTransactionsSection(lastTransactions: List<Transaction>) {
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
-                    "Ultimas transacciones",
+                    "Últimas transacciones",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium,
                 )
@@ -254,7 +254,7 @@ private fun DashboardCardItem(resume: MainData) {
                 "Gastos del mes: ${resume.totalExpenses.toPrice()}",
                 painterResource(R.drawable.ic_bag)
             )
-            DetailsRowWithIcon("Usuarios activos: 140", painterResource(R.drawable.ic_person))
+            DetailsRowWithIcon("Usuarios activos: ${resume.activeClients}", painterResource(R.drawable.ic_person))
             DetailsRowWithIcon("Cuotas pendientes: 80", painterResource(R.drawable.ic_task))
             DetailsRowWithIcon(
                 "Usuarios inactivos: 100",

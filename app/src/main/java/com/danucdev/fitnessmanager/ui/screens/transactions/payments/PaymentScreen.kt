@@ -326,7 +326,7 @@ private fun ClientSelector(
                     DropdownMenuItem(
                         text = { Text("${client.name} ${client.lastName}") },
                         onClick = {
-                            onActionDone(ClientSelectorActions.CLIENT_SELECTED, client.name)
+                            onActionDone(ClientSelectorActions.CLIENT_SELECTED, "${client.name} ${client.lastName}")
                         }
                     )
                 }
