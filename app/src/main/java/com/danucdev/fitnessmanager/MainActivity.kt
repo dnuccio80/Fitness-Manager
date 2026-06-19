@@ -20,6 +20,7 @@ import com.danucdev.fitnessmanager.ui.core.ex.backTo
 import com.danucdev.fitnessmanager.ui.core.ex.navigateTo
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.AddClient
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.ClientDetails
+import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.ClientEdit
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Clients
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Config
 import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Investment
@@ -29,10 +30,10 @@ import com.danucdev.fitnessmanager.ui.navigation.NavRoutes.Transactions
 import com.danucdev.fitnessmanager.ui.screens.main.MainScreen
 import com.danucdev.fitnessmanager.ui.screens.settings.SettingsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.addclients.AddClientScreen
-import com.danucdev.fitnessmanager.ui.screens.clients.ClientDetailsScreen
+import com.danucdev.fitnessmanager.ui.screens.clients.details.ClientDetailsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.clientlist.ClientsScreen
+import com.danucdev.fitnessmanager.ui.screens.clients.editclient.ClientEditScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.expenses.ExpensesScreen
-import com.danucdev.fitnessmanager.ui.screens.tests.TestingClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsScreen
 import com.danucdev.fitnessmanager.ui.theme.FitnessManagerTheme
@@ -63,12 +64,20 @@ class MainActivity : ComponentActivity() {
                                 currentRoute = currentRoute
                             )
                         }
-                        entry<Clients> { ClientsScreen(currentRoute = currentRoute) { target -> backStack.backTo(target) } }
+                        entry<Clients> { ClientsScreen(currentRoute = currentRoute, onBottomBarClick = { target -> backStack.backTo(target) }) { clientId -> backStack.navigateTo(ClientDetails(clientId)) }  }
 //                        entry<Clients> { TestingClientsScreen { backStack.back()} }
                         entry<Payment> { PaymentsScreen { backStack.back() } }
                         entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
                         entry<Investment> { ExpensesScreen(onBack = { backStack.back() }) }
-                        entry<ClientDetails> { key -> ClientDetailsScreen(key.clientId) }
+                        entry<ClientDetails> { key -> ClientDetailsScreen(
+                            key.clientId,
+                            onBack = { backStack.back() },
+                            onEdit = { backStack.navigateTo(ClientEdit(key.clientId)) },
+                        )  }
+                        entry<ClientEdit> { key -> ClientEditScreen(
+                            clientId = key.clientId,
+                            onBack = { backStack.back() },
+                        ) }
                         entry<Config> { SettingsScreen { backStack.back() } }
                         entry<Transactions> { TransactionsScreen(currentRoute) { target -> backStack.backTo(target) } }
                     },

@@ -1,5 +1,6 @@
 package com.danucdev.fitnessmanager.ui.screens.clients.clientlist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ fun ClientsScreen(
     viewModel: ClientListViewModel = hiltViewModel(),
     currentRoute: NavKey,
     onBottomBarClick: (NavKey) -> Unit,
+    onNavigateToDetails: (Int)-> Unit
 ) {
 
     val clientData = viewModel.clientData.collectAsStateWithLifecycle()
@@ -114,7 +116,7 @@ fun ClientsScreen(
                         }
                     } else {
                         items(clientData.value.clientList) { client ->
-                            ActiveClientRow(client)
+                            ActiveClientRow(client) { onNavigateToDetails(client.clientId)  }
                         }
                     }
                     item {
@@ -172,9 +174,11 @@ fun ClientsScreen(
 }
 
 @Composable
-private fun ActiveClientRow(client: Client) {
+private fun ActiveClientRow(client: Client, onClick: () -> Unit) {
     Card(
-        Modifier.fillMaxWidth(),
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(4.dp)
@@ -264,4 +268,4 @@ private fun InactiveClient(client: Client) {
 
         }
     }
-    }
+}

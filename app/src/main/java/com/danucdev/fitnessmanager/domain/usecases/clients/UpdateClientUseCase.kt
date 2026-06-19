@@ -4,12 +4,15 @@ import com.danucdev.fitnessmanager.domain.models.Client
 import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
 import javax.inject.Inject
 
-class AddClientUseCase @Inject constructor(private val repository: ClientRepository) {
-    suspend operator fun invoke(client: Client) {
+class UpdateClientUseCase @Inject constructor(private val clientRepository: ClientRepository) {
+
+    suspend operator fun invoke(client:Client) {
 
         val name = client.name.trim()
         val lastName = client.lastName.trim()
 
-        repository.addClient(client.copy(name = name, lastName = lastName))
+        clientRepository.updateClient(client.copy(name = name, lastName = lastName))
+
     }
+
 }

@@ -25,4 +25,8 @@ class ClientRepositoryImpl @Inject constructor(private val clientDao: ClientDao)
     override suspend fun deleteClientById(clientId: Int) {
         clientDao.deleteClientById(clientId)
     }
+
+    override suspend fun updateClient(client: Client) {
+        clientDao.updateClient(client.toEntity())
+    }
 }

@@ -8,4 +8,5 @@ interface ClientRepository {
     fun getClientById(clientId:Int): Flow<Client>
     suspend fun addClient(client: Client)
     suspend fun deleteClientById(clientId:Int)
+    suspend fun updateClient(client: Client)
 }
