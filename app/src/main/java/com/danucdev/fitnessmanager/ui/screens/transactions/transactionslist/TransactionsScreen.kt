@@ -120,7 +120,7 @@ private fun TransactionCard(data: Transaction) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(

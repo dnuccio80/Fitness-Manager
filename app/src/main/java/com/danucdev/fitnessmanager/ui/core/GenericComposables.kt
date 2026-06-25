@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -127,6 +128,14 @@ fun MainHeader(onNavigateToConfig: () -> Unit) {
             modifier = Modifier.clickable {
                 onNavigateToConfig()
             })
+    }
+}
+
+@Composable
+fun TitleWithDivider(label:String) {
+    Column {
+        Text(label, style = MaterialTheme.typography.titleLarge)
+        HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, DarkAccentLime)
     }
 }
 
