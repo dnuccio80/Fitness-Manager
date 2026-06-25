@@ -59,7 +59,7 @@ class AddClientsViewModel @Inject constructor(
     fun addClient() {
         if(isAllData()) {
             viewModelScope.launch(Dispatchers.IO) {
-                addClientUseCase(_clientData.value.toClient())
+                addClientUseCase(_clientData.value)
                 _events.emit("Cliente guardado con éxito!")
                 cleanData()
             }
