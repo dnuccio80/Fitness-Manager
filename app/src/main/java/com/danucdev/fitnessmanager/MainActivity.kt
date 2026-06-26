@@ -33,6 +33,7 @@ import com.danucdev.fitnessmanager.ui.screens.clients.addclients.AddClientScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.details.ClientDetailsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.clientlist.ClientsScreen
 import com.danucdev.fitnessmanager.ui.screens.clients.editclient.ClientEditScreen
+import com.danucdev.fitnessmanager.ui.screens.productservices.ProductServicesScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.expenses.ExpensesScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentsScreen
 import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsScreen
@@ -50,56 +51,56 @@ class MainActivity : ComponentActivity() {
             val currentRoute = backStack.last()
 
             FitnessManagerTheme(darkTheme = isDarkTheme) {
-                NavDisplay(
-                    backStack = backStack,
-                    onBack = { backStack.back() },
-                    entryProvider = entryProvider {
-                        entry<Main> {
-                            MainScreen(
-                                navigateToPaymentReceived = { backStack.navigateTo(Payment) },
-                                navigateToAddClient = { backStack.navigateTo(AddClient) },
-                                navigateToAddInvestment = { backStack.navigateTo(Investment) },
-                                navigateToConfig = { backStack.navigateTo(Config) },
-                                navigateToBottomBarAction = { target -> backStack.backTo(target) },
-                                currentRoute = currentRoute
-                            )
-                        }
-                        entry<Clients> { ClientsScreen(currentRoute = currentRoute, onBottomBarClick = { target -> backStack.backTo(target) }) { clientId -> backStack.navigateTo(ClientDetails(clientId)) }  }
-//                        entry<Clients> { TestingClientsScreen { backStack.back()} }
-                        entry<Payment> { PaymentsScreen { backStack.back() } }
-                        entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
-                        entry<Investment> { ExpensesScreen(onBack = { backStack.back() }) }
-                        entry<ClientDetails> { key -> ClientDetailsScreen(
-                            key.clientId,
-                            onBack = { backStack.back() },
-                            onEdit = { backStack.navigateTo(ClientEdit(key.clientId)) },
-                        )  }
-                        entry<ClientEdit> { key -> ClientEditScreen(
-                            clientId = key.clientId,
-                            onBack = { backStack.back() },
-                        ) }
-                        entry<Config> { SettingsScreen { backStack.back() } }
-                        entry<Transactions> { TransactionsScreen(currentRoute) { target -> backStack.backTo(target) } }
-                    },
-                    transitionSpec = {
-                        slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(300)
-                        ) togetherWith slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(300)
-                        )
-                    },
-                    popTransitionSpec = {
-                        slideInHorizontally(
-                            initialOffsetX = { -it },
-                            animationSpec = tween(300)
-                        ) togetherWith slideOutHorizontally(
-                            targetOffsetX = { it },
-                            animationSpec = tween(300)
-                        )
-                    }
-                )
+//                NavDisplay(
+//                    backStack = backStack,
+//                    onBack = { backStack.back() },
+//                    entryProvider = entryProvider {
+//                        entry<Main> {
+//                            MainScreen(
+//                                navigateToPaymentReceived = { backStack.navigateTo(Payment) },
+//                                navigateToAddClient = { backStack.navigateTo(AddClient) },
+//                                navigateToAddInvestment = { backStack.navigateTo(Investment) },
+//                                navigateToConfig = { backStack.navigateTo(Config) },
+//                                navigateToBottomBarAction = { target -> backStack.backTo(target) },
+//                                currentRoute = currentRoute
+//                            )
+//                        }
+//                        entry<Clients> { ClientsScreen(currentRoute = currentRoute, onBottomBarClick = { target -> backStack.backTo(target) }) { clientId -> backStack.navigateTo(ClientDetails(clientId)) }  }
+//                        entry<Payment> { PaymentsScreen { backStack.back() } }
+//                        entry<AddClient> { AddClientScreen(onBack = { backStack.back() }) }
+//                        entry<Investment> { ExpensesScreen(onBack = { backStack.back() }) }
+//                        entry<ClientDetails> { key -> ClientDetailsScreen(
+//                            key.clientId,
+//                            onBack = { backStack.back() },
+//                            onEdit = { backStack.navigateTo(ClientEdit(key.clientId)) },
+//                        )  }
+//                        entry<ClientEdit> { key -> ClientEditScreen(
+//                            clientId = key.clientId,
+//                            onBack = { backStack.back() },
+//                        ) }
+//                        entry<Config> { SettingsScreen { backStack.back() } }
+//                        entry<Transactions> { TransactionsScreen(currentRoute) { target -> backStack.backTo(target) } }
+//                    },
+//                    transitionSpec = {
+//                        slideInHorizontally(
+//                            initialOffsetX = { it },
+//                            animationSpec = tween(300)
+//                        ) togetherWith slideOutHorizontally(
+//                            targetOffsetX = { -it },
+//                            animationSpec = tween(300)
+//                        )
+//                    },
+//                    popTransitionSpec = {
+//                        slideInHorizontally(
+//                            initialOffsetX = { -it },
+//                            animationSpec = tween(300)
+//                        ) togetherWith slideOutHorizontally(
+//                            targetOffsetX = { it },
+//                            animationSpec = tween(300)
+//                        )
+//                    }
+//                )
+                ProductServicesScreen { }
             }
         }
     }

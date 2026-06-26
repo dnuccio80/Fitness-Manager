@@ -41,10 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.main.BottomBar
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
@@ -112,6 +114,33 @@ fun ScreenContainerWithBottomBar(
 @Composable
 fun ErrorText(text: String) {
     Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+}
+
+@Composable
+fun DescriptionCardWithPrice(title: String, amount:String) {
+    Card(
+        Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                title,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                amount.toPrice(),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = DarkAccentLime,
+                maxLines = 1,
+            )
+        }
+
+    }
 }
 
 @Composable
