@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import com.danucdev.fitnessmanager.data.impl.ClientRepositoryImpl
 import com.danucdev.fitnessmanager.data.dao.ClientDao
+import com.danucdev.fitnessmanager.data.dao.ProductServiceDao
 import com.danucdev.fitnessmanager.data.dao.TransactionDao
 import com.danucdev.fitnessmanager.data.db.AppDatabase
+import com.danucdev.fitnessmanager.data.impl.ProductServiceRepositoryImpl
 import com.danucdev.fitnessmanager.data.impl.TransactionRepositoryImpl
 import com.danucdev.fitnessmanager.domain.repositories.ClientRepository
+import com.danucdev.fitnessmanager.domain.repositories.ProductServiceRepository
 import com.danucdev.fitnessmanager.domain.repositories.TransactionRepository
 import dagger.Module
 import dagger.Provides
@@ -54,6 +57,18 @@ object Module {
     @Singleton
     fun provideTransactionRepository(transactionRepositoryImpl: TransactionRepositoryImpl): TransactionRepository {
         return transactionRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductServiceDao(appDatabase: AppDatabase): ProductServiceDao {
+        return appDatabase.productServiceDao
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductServicesRepository(productServiceRepositoryImpl: ProductServiceRepositoryImpl): ProductServiceRepository {
+        return productServiceRepositoryImpl
     }
 
 }

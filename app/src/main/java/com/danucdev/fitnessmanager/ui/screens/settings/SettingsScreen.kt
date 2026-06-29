@@ -31,7 +31,7 @@ import com.danucdev.fitnessmanager.ui.theme.DarkButton
 import com.danucdev.fitnessmanager.ui.theme.DarkIconsAccent
 
 @Composable
-fun SettingsScreen(onBack: () -> Unit) {
+fun SettingsScreen(onNavigateToProductServices:() -> Unit, onBack: () -> Unit) {
 
     var darkMode by rememberSaveable { mutableStateOf(true) }
 
@@ -42,7 +42,7 @@ fun SettingsScreen(onBack: () -> Unit) {
         TitleWithDivider("Productos y sevicios")
         Text("Tenes un total de 3 servicios y 20 productos")
         Button(
-            onClick = { },
+            onClick = { onNavigateToProductServices() },
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(containerColor = DarkButton)
         ) { Text("Administrar productos y servicios") }

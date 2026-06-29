@@ -117,9 +117,9 @@ fun ErrorText(text: String) {
 }
 
 @Composable
-fun DescriptionCardWithPrice(title: String, amount:String) {
+fun DescriptionCardWithPrice(title: String, amount: Long, onClick: () -> Unit) {
     Card(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(2.dp)

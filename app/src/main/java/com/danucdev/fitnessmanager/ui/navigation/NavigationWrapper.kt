@@ -19,6 +19,8 @@ sealed class NavRoutes: NavKey {
     @Serializable
     data object Investment: NavRoutes()
     @Serializable
+    data object ProductServices: NavRoutes()
+    @Serializable
     data class ClientDetails(val clientId:Int): NavRoutes()
     @Serializable
     data class ClientEdit(val clientId:Int): NavRoutes()
