@@ -20,7 +20,7 @@ class AddClientUseCase @Inject constructor(
             val transaction = Transaction(
                 isEarn = true,
                 amount = 40000,
-                description = "Inscripción en ${clientData.paymentMethod.method} de $name $lastName}"
+                description = "Inscripción en ${clientData.paymentMethod.method} de $name $lastName"
             )
 
             transactionRepo.addTransaction(transaction)

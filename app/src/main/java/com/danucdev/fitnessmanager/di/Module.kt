@@ -2,6 +2,8 @@ package com.danucdev.fitnessmanager.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.danucdev.fitnessmanager.data.impl.ClientRepositoryImpl
 import com.danucdev.fitnessmanager.data.dao.ClientDao
 import com.danucdev.fitnessmanager.data.dao.ProductServiceDao
@@ -17,6 +19,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Module
@@ -30,8 +35,19 @@ object Module {
             context,
             AppDatabase::class.java,
             "app_db"
-        )
-            .fallbackToDestructiveMigration(false)
+        ) .addCallback(object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+
+                db.execSQL(
+                    """
+                INSERT INTO ProductServiceEntity (label, amount)
+                VALUES ('Cuota mensual', 15000)
+                """.trimIndent()
+                )
+            }
+        })
+
             .build()
     }
 
