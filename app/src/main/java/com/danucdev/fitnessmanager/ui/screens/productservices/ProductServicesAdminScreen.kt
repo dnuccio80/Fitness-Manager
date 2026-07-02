@@ -111,6 +111,7 @@ fun ProductServicesScreen(
             NewProductServiceDialog(
                 label = uiState.newProductServiceData.label,
                 amount = amount,
+                enableLabelChange = uiState.newProductServiceData.id != 1,
                 onDismiss = {
                     showNewProductServiceDialog = false
                     viewModel.cleanData()
@@ -131,11 +132,11 @@ fun ProductServicesScreen(
 private fun NewProductServiceDialog(
     label: String,
     amount: String,
+    enableLabelChange:Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onLabelChange: (String) -> Unit,
     onAmountChange: (String) -> Unit,
-
     ) {
     Dialog(
         onDismissRequest = { onDismiss() }
@@ -156,6 +157,7 @@ private fun NewProductServiceDialog(
             ) {
                 TextFieldForSentencesItem(
                     value = label,
+                    enabled = enableLabelChange,
                     placeholder = "Descripción",
                 ) { onLabelChange(it) }
                 TextFieldForSentencesItem(

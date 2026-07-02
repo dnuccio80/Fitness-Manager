@@ -308,12 +308,14 @@ fun TextFieldForNamesItem(
 fun TextFieldForSentencesItem(
     value: String,
     placeholder: String,
+    enabled: Boolean = true,
     numberOnly: Boolean = false,
     onValueChange: (String) -> Unit,
 ) {
     TextField(
         value = if (numberOnly) value.filter { it.isDigit() } else value,
         modifier = Modifier.fillMaxWidth(),
+        enabled = enabled,
         placeholder = { Text(placeholder) },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.Transparent

@@ -4,4 +4,5 @@ data class MainData(
     val totalEarns: Long = 0L,
     val totalExpenses:Long = 0L,
     val activeClients:Int = 0,
+    val monthlyValue:Long = 0L
 )

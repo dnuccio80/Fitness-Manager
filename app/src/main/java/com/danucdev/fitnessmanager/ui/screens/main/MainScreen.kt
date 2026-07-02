@@ -261,7 +261,7 @@ private fun DashboardCardItem(resume: MainData) {
                 painterResource(R.drawable.ic_person_remove)
             )
             DetailsRowWithIcon(
-                "Valor de cuota actual: $40.000",
+                "Valor de cuota actual: ${resume.monthlyValue.toPrice()} ",
                 painterResource(R.drawable.ic_calendar)
             )
         }

@@ -12,7 +12,7 @@ class ProductServiceRepositoryImpl @Inject constructor(private val productServic
         return productServiceDao.getAllProductServices().map { list -> list.map { it.toDomain() } }
     }
 
-    override suspend fun getProductServiceById(id: Int): Flow<ProductService> {
+    override fun getProductServiceById(id: Int): Flow<ProductService> {
         return productServiceDao.getProductServiceById(id).map { it.toDomain() }
     }
 
