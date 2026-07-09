@@ -61,6 +61,7 @@ import com.danucdev.fitnessmanager.domain.models.Client
 import com.danucdev.fitnessmanager.domain.models.ProductService
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
+import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.CASH
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.TRANSFER
 import com.danucdev.fitnessmanager.ui.theme.CardDark
@@ -153,7 +154,7 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
                 ) { Text("Agregar item") }
                 Spacer(Modifier.size(0.dp))
                 Text(
-                    "Total: $productServicesTotal",
+                    "Total: ${productServicesTotal.toPrice()}",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -201,7 +202,8 @@ fun DraggableCardItem(productService: ProductService, onDelete: () -> Unit) {
                 Icons.Default.Delete,
                 tint = Color.White,
                 contentDescription = "delete icon",
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(vertical = 4.dp, horizontal = 16.dp)
                     .clickable { onDelete() })
             Box(
                 modifier = Modifier
@@ -227,7 +229,7 @@ fun DraggableCardItem(productService: ProductService, onDelete: () -> Unit) {
                     ) {
                         Text(productService.label, style = MaterialTheme.typography.labelLarge)
                         Text(
-                            productService.amount.toString(),
+                            productService.amount.toPrice(),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = DarkAccentLime
