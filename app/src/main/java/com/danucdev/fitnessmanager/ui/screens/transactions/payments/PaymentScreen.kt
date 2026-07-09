@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.danucdev.fitnessmanager.domain.models.Client
+import com.danucdev.fitnessmanager.domain.models.ProductService
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.CASH
@@ -79,15 +81,16 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
     val context = LocalContext.current
     val clients by viewModel.clientsList.collectAsStateWithLifecycle()
     val paymentData by viewModel.paymentData.collectAsStateWithLifecycle()
+    val productServicesList by viewModel.productServices.collectAsStateWithLifecycle()
+    val productServicesChart by viewModel.productServicesChart.collectAsStateWithLifecycle()
+    val productServicesTotal by viewModel.productServicesTotal.collectAsStateWithLifecycle()
+
 
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { msg ->
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 
     ScreenContainer("Agregar nuevo cobro", onBack = { onBack() }) {
         Column(
@@ -134,7 +137,9 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
             onPaymentSelected = { viewModel.updatePaymentMethod(it) }
         )
         LazyColumn {
-            item { DraggableCardItem {} }
+            productServicesChart.forEach {
+                item { DraggableCardItem(it) { } }
+            }
         }
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Column(
@@ -148,7 +153,7 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
                 ) { Text("Agregar item") }
                 Spacer(Modifier.size(0.dp))
                 Text(
-                    "Total: $40.000",
+                    "Total: $productServicesTotal",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -169,7 +174,7 @@ enum class DragState {
 }
 
 @Composable
-fun DraggableCardItem(onDelete: () -> Unit) {
+fun DraggableCardItem(productService: ProductService, onDelete: () -> Unit) {
 
     val dragState = remember {
         AnchoredDraggableState(
@@ -220,9 +225,9 @@ fun DraggableCardItem(onDelete: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Cuota mensual", style = MaterialTheme.typography.labelLarge)
+                        Text(productService.label, style = MaterialTheme.typography.labelLarge)
                         Text(
-                            "$40.000",
+                            productService.amount.toString(),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = DarkAccentLime
