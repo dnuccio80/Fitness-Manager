@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -25,6 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -33,17 +37,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
 import com.danucdev.fitnessmanager.domain.models.Transaction
+import com.danucdev.fitnessmanager.ui.core.CardDialogTransactionData
 import com.danucdev.fitnessmanager.ui.core.MainHeader
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.navigation.BottomNavigationItem
 import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_CLIENT
 import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_INVESTMENT
 import com.danucdev.fitnessmanager.ui.screens.main.TransactionSectionAction.NEW_PAYMENT
+import com.danucdev.fitnessmanager.ui.theme.CardDark
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
 import com.danucdev.fitnessmanager.ui.theme.MainDark
@@ -126,6 +133,7 @@ fun BottomBar(currentRoute: NavKey, onClick: (NavKey) -> Unit) {
 @Composable
 fun LastTransactionsSection(lastTransactions: List<Transaction>) {
 
+
     Card(
         Modifier
             .fillMaxWidth()
@@ -168,16 +176,20 @@ fun LastTransactionsSection(lastTransactions: List<Transaction>) {
             }
         }
     }
+
+
 }
 
 @Composable
 fun LastTransactionRowItem(transaction: Transaction) {
 
     val icon = if (transaction.isEarn) R.drawable.ic_money else R.drawable.ic_bag
+    var showInfoDialog by rememberSaveable { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { showInfoDialog = true },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -217,6 +229,10 @@ fun LastTransactionRowItem(transaction: Transaction) {
             )
         }
     }
+
+    if (showInfoDialog) {
+        CardDialogTransactionData(transaction) { showInfoDialog = false }
+    }
 }
 
 
@@ -254,7 +270,10 @@ private fun DashboardCardItem(resume: MainData) {
                 "Gastos del mes: ${resume.totalExpenses.toPrice()}",
                 painterResource(R.drawable.ic_bag)
             )
-            DetailsRowWithIcon("Usuarios activos: ${resume.activeClients}", painterResource(R.drawable.ic_person))
+            DetailsRowWithIcon(
+                "Usuarios activos: ${resume.activeClients}",
+                painterResource(R.drawable.ic_person)
+            )
             DetailsRowWithIcon("Cuotas pendientes: 80", painterResource(R.drawable.ic_task))
             DetailsRowWithIcon(
                 "Usuarios inactivos: 100",

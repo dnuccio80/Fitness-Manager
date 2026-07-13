@@ -45,7 +45,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,12 +54,14 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.danucdev.fitnessmanager.domain.models.Client
 import com.danucdev.fitnessmanager.domain.models.ProductService
 import com.danucdev.fitnessmanager.ui.core.MaxWidthButtonLime
 import com.danucdev.fitnessmanager.ui.core.ScreenContainer
+import com.danucdev.fitnessmanager.ui.core.TitleWithDivider
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.CASH
 import com.danucdev.fitnessmanager.ui.screens.transactions.payments.PaymentMethod.TRANSFER
@@ -78,6 +79,7 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
 
     var openClientMenu by rememberSaveable { mutableStateOf(false) }
     var clientQuery by rememberSaveable { mutableStateOf("") }
+    var showItemList by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
     val clients by viewModel.clientsList.collectAsStateWithLifecycle()
@@ -85,6 +87,7 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
     val productServicesList by viewModel.productServices.collectAsStateWithLifecycle()
     val productServicesChart by viewModel.productServicesChart.collectAsStateWithLifecycle()
     val productServicesTotal by viewModel.productServicesTotal.collectAsStateWithLifecycle()
+
 
 
     LaunchedEffect(viewModel.events) {
@@ -137,10 +140,28 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
             paymentSelected = paymentData.paymentMethod,
             onPaymentSelected = { viewModel.updatePaymentMethod(it) }
         )
-        LazyColumn {
-            productServicesChart.forEach {
-                item { DraggableCardItem(it) { } }
+        Column {
+            Text(
+                "Items a cobrar",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            HorizontalDivider(thickness = 1.dp, color = DarkAccentLime)
+        }
+        LazyColumn(modifier = Modifier.heightIn(max = 190.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (productServicesChart.isNotEmpty()) {
+                productServicesChart.forEach { productService ->
+                    item { DraggableCardItem(productService) { viewModel.deleteItemFromChart(productService) } }
+                }
+            } else {
+                item {
+                    Text(
+                        "Agregue items a cobrar al cliente..",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
+
         }
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Column(
@@ -149,7 +170,7 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { showItemList = true },
                     shape = RoundedCornerShape(8.dp)
                 ) { Text("Agregar item") }
                 Spacer(Modifier.size(0.dp))
@@ -167,8 +188,62 @@ fun PaymentsScreen(viewModel: PaymentsViewModel = hiltViewModel(), onBack: () ->
                 Spacer(modifier = Modifier.size(16.dp))
             }
         }
+        if(showItemList) {
+            ItemsDialog(productServicesList, onItemSelected = { itemId ->
+                showItemList = false
+                viewModel.addItemToChart(itemId)
+            }) { showItemList = false }
+        }
     }
 }
+
+@Composable
+private fun ItemsDialog(
+    productServicesList: List<ProductService>,
+    onItemSelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = CardDark
+            )
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 500.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TitleWithDivider("Agregar item")
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    productServicesList.forEach { productService ->
+                        item {
+                            Box(Modifier
+                                .fillMaxWidth()
+                                .clickable { onItemSelected(productService.id) }) {
+                                Text(
+                                    productService.label,
+                                    modifier = Modifier.fillMaxWidth().padding(4.dp),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 enum class DragState {
     LEFT, RIGHT
@@ -194,10 +269,10 @@ fun DraggableCardItem(productService: ProductService, onDelete: () -> Unit) {
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Red)
     ) {
-        Box (
+        Box(
             Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
-        ){
+        ) {
             Icon(
                 Icons.Default.Delete,
                 tint = Color.White,
@@ -214,7 +289,7 @@ fun DraggableCardItem(productService: ProductService, onDelete: () -> Unit) {
                         orientation = Orientation.Horizontal
                     )
             ) {
-                Card (
+                Card(
                     Modifier
                         .fillMaxWidth()
                         .background(CardDark),

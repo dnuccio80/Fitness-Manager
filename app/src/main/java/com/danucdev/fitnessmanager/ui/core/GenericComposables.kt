@@ -2,6 +2,7 @@ package com.danucdev.fitnessmanager.ui.core
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,8 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.R
+import com.danucdev.fitnessmanager.domain.models.Transaction
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.main.BottomBar
+import com.danucdev.fitnessmanager.ui.theme.CardDark
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentGray
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentLime
 import com.danucdev.fitnessmanager.ui.theme.DarkAccentWhite
@@ -119,12 +125,19 @@ fun ErrorText(text: String) {
 @Composable
 fun DescriptionCardWithPrice(title: String, amount: Long, onClick: () -> Unit) {
     Card(
-        Modifier.fillMaxWidth().clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 title,
                 style = MaterialTheme.typography.labelLarge,
@@ -161,7 +174,7 @@ fun MainHeader(onNavigateToConfig: () -> Unit) {
 }
 
 @Composable
-fun TitleWithDivider(label:String) {
+fun TitleWithDivider(label: String) {
     Column {
         Text(label, style = MaterialTheme.typography.titleLarge)
         HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, DarkAccentLime)
@@ -326,6 +339,82 @@ fun TextFieldForSentencesItem(
         singleLine = true,
         maxLines = 1,
         onValueChange = { onValueChange(it) })
+}
+
+@Composable
+fun CardDialogTransactionData(
+    transaction: Transaction,
+    isEditable: Boolean = false,
+    onDismiss: () -> Unit,
+) {
+
+    val title = if (transaction.isEarn) "Ingreso de dinero" else "Salida de dinero"
+
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(containerColor = CardDark)
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Column(Modifier.fillMaxWidth()) {
+                        Text(
+                            title,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
+                    }
+                }
+                Text(transaction.description, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    transaction.amount.toPrice(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = DarkAccentLime,
+                    fontWeight = FontWeight.Bold
+                )
+                if (isEditable) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row(
+
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Absolute.spacedBy(16.dp)
+                        ) {
+                            IconButton(
+                                onClick = { },
+                                modifier = Modifier.border(2.dp, MainDark, CircleShape)
+                            ) { Icon(Icons.Default.Edit, contentDescription = "edit data") }
+                            IconButton(
+                                onClick = { },
+                                modifier = Modifier.border(2.dp, MainDark, CircleShape)
+                            ) { Icon(Icons.Default.Delete, contentDescription = "delete data") }
+                        }
+                    }
+                }
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Button(
+                        onClick = { onDismiss() }
+                    ) {
+                        Text(
+                            "Cerrar",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

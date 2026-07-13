@@ -1,6 +1,7 @@
 package com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,9 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +32,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.danucdev.fitnessmanager.domain.models.Transaction
+import com.danucdev.fitnessmanager.ui.core.CardDialogTransactionData
 import com.danucdev.fitnessmanager.ui.core.ScreenContainerWithBottomBar
 import com.danucdev.fitnessmanager.ui.core.ex.toPrice
 import com.danucdev.fitnessmanager.ui.screens.transactions.transactionslist.TransactionsViewMode.ALL
@@ -97,9 +102,10 @@ fun TransactionsScreen(
 private fun TransactionCard(data: Transaction) {
 
     val color = if (data.isEarn) AccentColor2 else ErrorContainer
+    var showInfoDialog by rememberSaveable { mutableStateOf(false) }
 
     Card(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable{ showInfoDialog = true },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = color),
         elevation = CardDefaults.cardElevation(8.dp)
@@ -140,6 +146,10 @@ private fun TransactionCard(data: Transaction) {
             }
         }
 
+    }
+
+    if(showInfoDialog) {
+        CardDialogTransactionData(data, isEditable = true) { showInfoDialog = false }
     }
 
 }

@@ -6,19 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.danucdev.fitnessmanager.domain.models.ProductService
 import com.danucdev.fitnessmanager.domain.repositories.ProductServiceRepository
 import com.danucdev.fitnessmanager.domain.usecases.clients.GetAllClientsUseCase
+import com.danucdev.fitnessmanager.domain.usecases.productservices.GetProductServiceByIdUseCase
 import com.danucdev.fitnessmanager.domain.usecases.transactions.AddTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -29,17 +27,11 @@ import javax.inject.Inject
 class PaymentsViewModel @Inject constructor(
     getAllClientsUseCase: GetAllClientsUseCase,
     private val addTransactionUseCase: AddTransactionUseCase,
-    productServiceRepository: ProductServiceRepository
+    productServiceRepository: ProductServiceRepository,
+    private val getProductServiceByIdUseCase: GetProductServiceByIdUseCase,
 ) : ViewModel() {
 
     val productServicesChart = MutableStateFlow<List<ProductService>>(emptyList())
-
-    init {
-        viewModelScope.launch {
-            val monthlyQuote = productServiceRepository.getProductServiceById(1).first()
-            productServicesChart.value = listOf(monthlyQuote)
-        }
-    }
 
     private val _clientsList = getAllClientsUseCase().stateIn(
         viewModelScope,
@@ -78,6 +70,12 @@ class PaymentsViewModel @Inject constructor(
         }
     }
 
+    fun updateAmount() {
+        _paymentData.update { current ->
+            current.copy(amount = productServicesTotal.value)
+        }
+    }
+
     fun addPayment() {
         if (!isAllData()) {
             viewModelScope.launch {
@@ -98,10 +96,25 @@ class PaymentsViewModel @Inject constructor(
                 clientName = "",
                 paymentMethod = PaymentMethod.CASH,
                 description = "",
-                amount = 40000
+                amount = 0
             )
         }
+        productServicesChart.value = emptyList()
     }
+
+    fun addItemToChart(id:Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val productService = async { getProductServiceByIdUseCase(id) }.await()
+            productServicesChart.value += productService
+            updateAmount()
+        }
+    }
+
+    fun deleteItemFromChart(productService: ProductService) {
+        productServicesChart.value -= productService
+        updateAmount()
+    }
+
 
     private fun isAllData(): Boolean {
         return _paymentData.value.clientName.isNotBlank() &&
